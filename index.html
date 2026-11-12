@@ -88,6 +88,7 @@ input:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px
 <nav id="nav"></nav>
 <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
+<script src="produk.js"></script>
 <script>
 var S={ord:[],cur:null,tab:'home',phone:''};
 try{var s=JSON.parse(localStorage.getItem('zvx_pesanan')||'null');if(Array.isArray(s))S.ord=s}catch(e){}
@@ -100,17 +101,7 @@ function close_(){$('ov').classList.remove('on')}
 $('ov').addEventListener('click',function(e){if(e.target===$('ov'))close_()});
 function esc(x){return String(x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
-var JASA=[
- {i:'🎨',n:'Desain logo',d:'3 konsep, revisi 2x',p:150000},
- {i:'🎬',n:'Edit video pendek',d:'Hingga 60 detik',p:75000},
- {i:'🌐',n:'Website company profile',d:'1 halaman responsif',p:500000},
- {i:'✍️',n:'Penulisan konten',d:'5 artikel, 500 kata',p:125000},
- {i:'📸',n:'Edit foto produk',d:'10 foto, latar bersih',p:50000},
- {i:'📈',n:'Kelola media sosial',d:'12 postingan per bulan',p:350000}];
-var PULSA=[5000,10000,20000,25000,50000,100000];
-var DATA=[{n:'Data 3 GB',d:'7 hari',p:20000},{n:'Data 8 GB',d:'30 hari',p:45000},{n:'Data 15 GB',d:'30 hari',p:70000},{n:'Data 30 GB',d:'30 hari',p:110000},{n:'Data 50 GB',d:'30 hari',p:150000},{n:'Data 100 GB',d:'30 hari',p:230000}];
-var TOKEN=[20000,50000,100000,200000,500000];
-var TOKENP={20000:23000,50000:53000,100000:103000,200000:203000,500000:510000};
+var JASA=PRODUK.jasa,PULSA=PRODUK.pulsa,DATA=PRODUK.data,TOKEN=PRODUK.token,TOKENP=PRODUK.tokenp,MU=PRODUK.markupPulsa;
 
 function opr(n){var p=n.slice(0,4);
  if(/^08(11|12|13|21|22|23|52|53|51)$/.test(p))return 'Telkomsel';
@@ -125,20 +116,13 @@ function home(){
  +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
  +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"tagihan('bpjs')")+mi('🚗','E-Samsat',"tagihan('samsat')")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
  +'</div></div>'
- +'<div class="promo"><b>Pulsa mulai Rp8.000</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
+ +'<div class="promo"><b>Pulsa mulai '+rp(PULSA[0]+MU)+'</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
  +'<h2>Pesanan terakhir</h2>'+ordList(S.ord.slice(0,3));
  return h}
 function mi(i,n,f){return '<button onclick="'+f+'"><i>'+i+'</i>'+n+'</button>'}
 function svc(j,k){return '<div class="row"><div class="svc"><i>'+j.i+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+rp(j.p)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
-var TOKO={nama:'ZVX STORE',wa:'082245735717'};
-// Isi nomor rekening/e-wallet di bawah ini. Kosongkan jika belum ada (admin akan kirim lewat WhatsApp).
-var PAY=[
- {k:'Transfer bank',no:'',bank:'',an:'ZVX STORE'},
- {k:'DANA',no:'',an:'ZVX STORE'},
- {k:'GoPay',no:'',an:'ZVX STORE'},
- {k:'ShopeePay',no:'',an:'ZVX STORE'},
- {k:'QRIS',qris:'qris.png'}];
+var TOKO=PRODUK.toko,PAY=PRODUK.pay;
 function payOf(k){for(var i=0;i<PAY.length;i++)if(PAY[i].k===k)return PAY[i];return PAY[1]}
 function waNo(){var n=String(TOKO.wa||'').replace(/\D/g,'');if(n.indexOf('0')===0)n='62'+n.slice(1);return n}
 function wa(msg){window.open('https://wa.me/'+waNo()+(msg?'?text='+encodeURIComponent(msg):''),'_blank')}
@@ -160,7 +144,7 @@ function payPick(k){if(!S.cur)return;S.cur.m=k;if(S.ord.some(function(x){return 
 function payCopy(){var p=payOf(S.cur.m);try{navigator.clipboard.writeText(p.no);toast('Nomor disalin')}catch(e){toast('Salin manual: '+p.no)}}
 function payBox(o){var p=payOf(o.m),t='<b style="color:var(--tx)">'+rp(o.a)+'</b>';
  if(!o.a)return '<p style="color:var(--mut);font-size:14px;line-height:1.6;margin-top:10px">Total tagihan dan cara bayar akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p>';
- if(p.k==='QRIS')return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Scan QRIS di bawah, lalu bayar tepat '+t+'.</p><div style="text-align:center;margin:10px 0"><img src="'+p.qris+'" alt="QRIS ZVX STORE" style="width:100%;max-width:260px;border-radius:12px;background:#fff" onerror="this.style.display=\'none\';document.getElementById(\'qn\').style.display=\'block\'"><p id="qn" style="display:none;color:var(--mut);font-size:14px">Kode QRIS akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p></div>';
+ if(p.k==='QRIS')return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Scan QRIS di bawah (nama merchant yang tampil: <b style="color:var(--tx)">'+esc(p.nama||'ZVX STORE')+'</b>), lalu bayar tepat '+t+'.</p><div style="text-align:center;margin:10px 0"><img src="'+p.qris+'" alt="QRIS ZVX STORE" style="width:100%;max-width:260px;border-radius:12px;background:#fff" onerror="this.style.display=\'none\';document.getElementById(\'qn\').style.display=\'block\'"><p id="qn" style="display:none;color:var(--mut);font-size:14px">Kode QRIS akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p></div>';
  if(p.no)return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Transfer '+t+' ke <b style="color:var(--tx)">'+esc(p.k+(p.bank?' '+p.bank:''))+' '+esc(p.no)+'</b> a.n. '+esc(p.an)+'.</p><button class="cta" style="background:var(--bg);color:var(--tx);margin:0 0 4px" onclick="payCopy()">Salin nomor</button>';
  return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Total bayar '+t+'. Nomor '+esc(p.k)+' akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p>'}
 function ordShow(o){S.cur=o;if(!o.m)o.m='DANA';
@@ -172,8 +156,7 @@ function ordShow(o){S.cur=o;if(!o.m)o.m='DANA';
  +'<button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="close_()">Tutup</button>')}
 function ordWa(){var o=S.cur;if(!o)return;if(!S.ord.some(function(x){return x.id===o.id})){S.ord.unshift(o);save();draw()}wa(orderText(o))}
 
-// Biaya admin untuk layanan tagihan (ubah sesuai tokomu)
-var ADM={bpjs:3000,samsat:3000};
+var ADM=PRODUK.adm;
 var TG={bpjs:{n:'BPJS Kesehatan',l:'Nomor VA BPJS',ph:'16 digit nomor VA',im:'numeric'},samsat:{n:'E-Samsat',l:'Nomor polisi',ph:'Contoh: S 1234 AB',im:''}};
 function tagihan(k){S.tg=k;var t=TG[k];
  open_('<h3>'+t.n+'</h3><label for="tg1">'+t.l+'</label><input id="tg1" '+(t.im?'inputmode="'+t.im+'" ':'')+'placeholder="'+t.ph+'" autocomplete="off"><label for="tg2">Nama pemilik (opsional)</label><input id="tg2" autocomplete="off"><label for="tg3">Nominal tagihan, jika sudah tahu (opsional)</label><input id="tg3" inputmode="numeric" placeholder="Contoh: 150000"><label for="tg4">Catatan (opsional)</label><input id="tg4" autocomplete="off"><p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(ADM[k])+'. Kalau nominal dikosongkan, admin akan mengecek tagihan dan membalas lewat WhatsApp.</p><button class="cta" onclick="tgGo()">Lanjut</button>')}
@@ -184,13 +167,13 @@ function tgGo(){var k=S.tg,t=TG[k],no=$('tg1').value.trim();if(no.length<5){toas
 var sel=null,mode='pulsa';
 function pulsa(){sel=null;mode='pulsa';pl()}
 function pl(){
- var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),d:'Pulsa',p:v+3000}}):DATA;
+ var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),d:'Pulsa',p:v+MU}}):DATA;
  open_('<h3>Pulsa & Data</h3><div class="tabs"><button class="'+(mode==='pulsa'?'on':'')+'" onclick="mode=\'pulsa\';sel=null;pl()">Pulsa</button><button class="'+(mode==='data'?'on':'')+'" onclick="mode=\'data\';sel=null;pl()">Paket data</button></div>'
  +'<label for="no">Nomor ponsel</label><input id="no" inputmode="numeric" maxlength="14" placeholder="08xx xxxx xxxx" value="'+esc(S.phone)+'" oninput="S.phone=this.value.replace(/\\D/g,\'\');var o=opr(S.phone);$(\'op\').innerHTML=o?\'<span class=op>\'+o+\'</span>\':\'\';chk()"><div id="op">'+(opr(S.phone)?'<span class="op">'+opr(S.phone)+'</span>':'')+'</div>'
  +'<label>Pilih nominal</label><div class="chips">'+items.map(function(x,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';pl()">'+x.n+'<small>'+(mode==='pulsa'?rp(x.p):x.d+' · '+rp(x.p))+'</small></div>'}).join('')+'</div>'
  +'<button class="cta" id="go" disabled onclick="goPulsa()">'+(sel!==null?'Pesan '+rp(items[sel].p):'Pesan')+'</button>');chk()}
 function chk(){var b=$('go');if(b)b.disabled=!(S.phone.length>=10&&sel!==null)}
-function goPulsa(){var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),p:v+3000}}):DATA;var x=items[sel];bayar((mode==='pulsa'?'Pulsa ':'')+x.n,S.phone+' · '+(opr(S.phone)||'Operator'),x.p)}
+function goPulsa(){var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),p:v+MU}}):DATA;var x=items[sel];bayar((mode==='pulsa'?'Pulsa ':'')+x.n,S.phone+' · '+(opr(S.phone)||'Operator'),x.p)}
 
 var lid='';
 function listrik(){sel=null;ll()}

@@ -1,5 +1,5 @@
-const CACHE = 'zvx-store-v10';
-const FILES = ['./', 'index.html', 'admin.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'zvx-store-v12';
+const FILES = ['./', 'index.html', 'admin.html', 'produk.js', 'qris.jpg', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
@@ -13,6 +13,6 @@ self.addEventListener('fetch', e => {
       const copy = r.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return r;
-    }).catch(() => caches.match(e.request).then(r => r || caches.match('index.html')))
+    }).catch(() => caches.match(e.request).then(r => r || (e.request.mode === 'navigate' ? caches.match('index.html') : Response.error())))
   );
 });

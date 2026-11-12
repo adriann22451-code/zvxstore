@@ -122,6 +122,7 @@ if(!cfg){
 }
 })();
 </script>
+<script src="produk.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -136,7 +137,7 @@ function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';cle
 const DEF={nama:'ZVX STORE',alamat:'Jl. Raya Bapuhbandung No. 5\nGlagah, Lamongan',hp:'',foot:'Terima kasih sudah berbelanja.\nSimpan struk ini sebagai bukti pembayaran.',kertas:'58'};
 let ST=Object.assign({},DEF,ld('zvx_toko',{})),HIS=ld('zvx_struk',[]),CNT=ld('zvx_cnt',0);
 const JENIS={pulsa:'Pulsa',data:'Paket data',listrik:'Token listrik',jasa:'Jasa online',bpjs:'BPJS Kesehatan',samsat:'E-Samsat',lain:'Lainnya'};
-const NOM={pulsa:[[5000,8000],[10000,13000],[20000,23000],[25000,28000],[50000,53000],[100000,103000]],listrik:[[20000,23000],[50000,53000],[100000,103000],[200000,203000],[500000,510000]]};
+const NOM={pulsa:PRODUK.pulsa.map(v=>[v,v+PRODUK.markupPulsa]),listrik:PRODUK.token.map(v=>[v,PRODUK.tokenp[v]])};
 const nm=(j,n)=>(j==='pulsa'?'Pulsa ':'Token listrik ')+n.toLocaleString('id-ID');
 let F={jenis:'listrik',tujuan:'',item:'',harga:0,nama:'',metode:'DANA',token:'',plg:'',kwh:'',ket:''},saved=null;
 
@@ -215,8 +216,11 @@ $('seg').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b
  $('v-buat').hidden=b.dataset.t!=='buat';$('v-riw').hidden=b.dataset.t!=='riw';if(b.dataset.t==='riw')hist();else preview()});
 
 $('gear').onclick=()=>{
- openS(`<h3>Pengaturan toko</h3><label for="s-nama">Nama toko</label><input id="s-nama" value="${esc(ST.nama)}"><label for="s-alamat">Alamat</label><textarea id="s-alamat">${esc(ST.alamat)}</textarea><label for="s-hp">Nomor telepon toko (opsional)</label><input id="s-hp" value="${esc(ST.hp)}" inputmode="tel"><label for="s-foot">Pesan di bawah struk</label><textarea id="s-foot">${esc(ST.foot)}</textarea><label for="s-kertas">Lebar kertas cetak</label><select id="s-kertas"><option value="58">58 mm (printer thermal kecil)</option><option value="80">80 mm (printer thermal besar)</option><option value="120">Kertas biasa (struk di tengah)</option></select><label for="s-pw">Ganti sandi admin (kosongkan jika tidak diganti)</label><input id="s-pw" type="password" autocomplete="new-password" placeholder="Sandi baru, minimal 6 karakter"><div class="btns"><button class="btn" id="s-ok">Simpan</button><button class="btn alt" id="s-th">Ganti tema</button></div>`);
+ openS(`<h3>Pengaturan toko</h3><label for="s-nama">Nama toko</label><input id="s-nama" value="${esc(ST.nama)}"><label for="s-alamat">Alamat</label><textarea id="s-alamat">${esc(ST.alamat)}</textarea><label for="s-hp">Nomor telepon toko (opsional)</label><input id="s-hp" value="${esc(ST.hp)}" inputmode="tel"><label for="s-foot">Pesan di bawah struk</label><textarea id="s-foot">${esc(ST.foot)}</textarea><label for="s-kertas">Lebar kertas cetak</label><select id="s-kertas"><option value="58">58 mm (printer thermal kecil)</option><option value="80">80 mm (printer thermal besar)</option><option value="120">Kertas biasa (struk di tengah)</option></select><label for="s-pw">Ganti sandi admin (kosongkan jika tidak diganti)</label><input id="s-pw" type="password" autocomplete="new-password" placeholder="Sandi baru, minimal 6 karakter"><div class="btns"><button class="btn" id="s-ok">Simpan</button><button class="btn alt" id="s-th">Ganti tema</button><button class="btn alt" id="s-ex">Export backup</button><button class="btn alt" id="s-im">Import backup</button><input type="file" id="s-file" accept="application/json" hidden></div>`);
  $('s-kertas').value=ST.kertas;
+ $('s-ex').onclick=()=>{const d={v:1,struk:HIS,cnt:CNT};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='zvx-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Backup diunduh')};
+ $('s-im').onclick=()=>$('s-file').click();
+ $('s-file').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||!Array.isArray(d.struk))throw 0;const ids=new Set(HIS.map(r=>r.id));let n=0;d.struk.forEach(r=>{if(r&&r.id&&r.item&&!ids.has(r.id)){HIS.push(r);ids.add(r.id);n++}});HIS.sort((a,b)=>b.t-a.t);CNT=Math.max(CNT,+d.cnt||0);sv('zvx_struk',HIS);sv('zvx_cnt',CNT);closeS();hist();toast(n+' struk diimpor')}catch(x){toast('File backup tidak valid')}};rd.readAsText(f)};
  $('s-th').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'};
  $('s-ok').onclick=async()=>{const np=$('s-pw').value;if(np){if(np.length<6){toast('Sandi minimal 6 karakter');return}await setPw(np)}ST={nama:$('s-nama').value.trim()||DEF.nama,alamat:$('s-alamat').value,hp:$('s-hp').value.trim(),foot:$('s-foot').value,kertas:$('s-kertas').value};sv('zvx_toko',ST);closeS();preview();toast('Pengaturan tersimpan')}};
 
