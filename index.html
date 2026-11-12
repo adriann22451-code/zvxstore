@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ZVX STORE">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
 <style>
 :root{--bg:#f2f5fa;--card:#fff;--tx:#14213d;--mut:#6b7a90;--pri:#1f7ae0;--pri2:#4a9bf0;--line:#e3e9f2;--ok:#16a34a;--warn:#f59e0b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1522;--card:#18212f;--tx:#e8eef7;--mut:#8a99b0;--line:#26324a;--pri:#4a9bf0;--pri2:#2f7fd6}}
@@ -74,6 +75,12 @@ input:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px
 .rr{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin:5px 0}.rr span{color:#555}.rr b{text-align:right}.rr.big{font-size:16px}
 .rf{text-align:center;font-size:12px;color:#555}
 @media print{body>*:not(.ov){display:none!important}.ov{position:static;background:none;display:block}.sheet{position:static;transform:none;max-width:320px;margin:0 auto;padding:0;overflow:visible;max-height:none;background:#fff}.sheet .cta{display:none}body{padding:0;background:#fff}.receipt{border:0}}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:46px;height:46px;border-radius:13px;box-shadow:0 2px 8px rgba(0,0,0,.25);background:#fff}
+.brand b{font-size:19px;display:block;line-height:1.15}.brand small{opacity:.9;font-size:12px}
+.hd{display:flex;justify-content:space-between;align-items:center}
+.chat{background:rgba(255,255,255,.22);color:#fff;border:0;border-radius:20px;padding:9px 15px;font-size:14px;cursor:pointer}
+.hero h1{font-size:22px;margin:26px 0 0;font-weight:700}
 </style>
 </head>
 <body>
@@ -82,9 +89,9 @@ input:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px
 <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
 <script>
-var S={saldo:83411,tx:[],tab:'home',hide:false,phone:''};
-try{var s=JSON.parse(localStorage.getItem('kiospay')||'null');if(s&&typeof s.saldo==='number')S=Object.assign(S,s,{tab:'home'})}catch(e){}
-function save(){try{localStorage.setItem('kiospay',JSON.stringify({saldo:S.saldo,tx:S.tx,hide:S.hide}))}catch(e){}}
+var S={ord:[],cur:null,tab:'home',phone:''};
+try{var s=JSON.parse(localStorage.getItem('zvx_pesanan')||'null');if(Array.isArray(s))S.ord=s}catch(e){}
+function save(){try{localStorage.setItem('zvx_pesanan',JSON.stringify(S.ord))}catch(e){}}
 var $=function(i){return document.getElementById(i)};
 var rp=function(n){return 'Rp'+Math.round(n).toLocaleString('id-ID')};
 function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2200)}
@@ -113,32 +120,39 @@ function opr(n){var p=n.slice(0,4);
  if(/^08(81|82|83|84|85|86|87|88|89)$/.test(p))return 'Smartfren';return ''}
 
 function home(){
- var h='<div class="hero"><div class="bal"><small>Rp</small><span>'+(S.hide?'••••••':S.saldo.toLocaleString('id-ID'))+'</span><button class="eye" aria-label="Tampilkan atau sembunyikan saldo" onclick="S.hide=!S.hide;save();draw()">'+(S.hide?'🙈':'👁️')+'</button></div>'
- +'<div class="acts"><button onclick="topup()"><i>＋</i>Top Up</button><button onclick="toast(\'Fitur minta uang segera hadir\')"><i>↙</i>Minta</button><button onclick="kirim()"><i>↗</i>Kirim</button><button onclick="S.tab=\'act\';draw()"><i>✉</i>Pesan</button></div></div>'
+ var h='<div class="hero"><div class="hd"><div class="brand"><img src="icon-192.png" alt="Logo ZVX STORE"><div><b>ZVX STORE</b><small>Pulsa · Token · Jasa Online</small></div></div><button class="chat" onclick="wa()">💬 Chat</button></div><h1>Mau beli apa hari ini?</h1></div>'
  +'<div class="box up"><div class="grid">'
- +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('✈️','Travel',"toast('Travel segera hadir')")
- +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('💳','Tagihan',"toast('Tagihan segera hadir')")+mi('🤝','Affiliate',"toast('Affiliate segera hadir')")+mi('⋯','Lihat Semua',"toast('Menu lain segera hadir')")
+ +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
+ +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('💳','Tagihan',"toast('Tagihan segera hadir')")+mi('✈️','Travel',"toast('Travel segera hadir')")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
  +'</div></div>'
  +'<div class="promo"><b>Pulsa mulai Rp8.000</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
- +'<h2>Aktivitas terakhir</h2>'+txList(S.tx.slice(0,3));
+ +'<h2>Pesanan terakhir</h2>'+ordList(S.ord.slice(0,3));
  return h}
 function mi(i,n,f){return '<button onclick="'+f+'"><i>'+i+'</i>'+n+'</button>'}
 function svc(j,k){return '<div class="row"><div class="svc"><i>'+j.i+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+rp(j.p)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
-function txList(a){if(!a.length)return '<div class="list"><div class="empty">Belum ada transaksi. Coba beli pulsa atau pesan jasa.</div></div>';
- return '<div class="list">'+a.map(function(t,k){return '<div class="row" style="cursor:pointer" onclick="struk('+k+')"><div><b>'+esc(t.t)+'</b><small>'+esc(t.s)+' · '+t.d+'</small></div><div class="amt '+(t.a>0?'pos':'neg')+'">'+(t.a>0?'+':'−')+rp(Math.abs(t.a))+'</div></div>'}).join('')+'</div>'}
-function actv(){return '<h2>Aktivitas</h2>'+txList(S.tx)}
-function dompet(){return '<h2>Dompet</h2><div class="box" style="padding:20px"><div style="color:var(--mut);font-size:14px">Saldo ZVX STORE</div><div style="font-size:30px;font-weight:700;margin:4px 0 14px">'+rp(S.saldo)+'</div><button class="cta" style="margin:0" onclick="topup()">Top up saldo</button></div>'}
-function saya(){return '<h2>Saya</h2><div class="list"><div class="row"><div><b>Pengguna ZVX STORE</b><small>Akun demo · data tersimpan di perangkat ini</small></div></div><div class="row"><div>Mode tampilan</div><button class="btn2" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme===\'dark\'?\'light\':\'dark\'">Ganti</button></div><div class="row"><div><b>Menu admin</b><small>Khusus admin (perlu sandi)</small></div><a class="btn2" href="admin.html" style="text-decoration:none">Buka 🔒</a></div><div class="row"><div>Reset data demo</div><button class="btn2" onclick="if(confirm(\'Reset saldo dan riwayat?\')){S.saldo=83411;S.tx=[];save();draw()}">Reset</button></div></div>'}
+var TOKO={nama:'ZVX STORE',wa:'',dana:'',an:'ZVX STORE'};
+function wa(msg){window.open('https://wa.me/'+TOKO.wa+(msg?'?text='+encodeURIComponent(msg):''),'_blank')}
+function ordList(a){if(!a.length)return '<div class="list"><div class="empty">Belum ada pesanan. Pilih layanan di atas untuk mulai belanja.</div></div>';
+ return '<div class="list">'+a.map(function(o,k){return '<div class="row" style="cursor:pointer" onclick="ordView('+k+')"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+' · '+esc(o.d)+'</small></div><div class="amt">'+rp(o.a)+'</div></div>'}).join('')+'</div>'}
+function actv(){return '<h2>Pesanan</h2>'+ordList(S.ord)}
+function info(){return '<h2>Info toko</h2><div class="list"><div class="row"><div><b>ZVX STORE</b><small>Jl. Raya Bapuhbandung No. 5, Glagah, Lamongan</small></div></div><div class="row"><div><b>Cara pesan</b><small>Pilih produk, isi nomor tujuan, bayar lewat DANA, lalu kirim bukti bayar ke WhatsApp admin</small></div></div><div class="row"><div>Hubungi admin</div><button class="btn2" onclick="wa()">Chat</button></div><div class="row"><div>Mode tampilan</div><button class="btn2" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme===\'dark\'?\'light\':\'dark\'">Ganti</button></div><div class="row"><div><b>Menu admin</b><small>Khusus admin (perlu sandi)</small></div><a class="btn2" href="admin.html" style="text-decoration:none">Buka 🔒</a></div></div>'}
 function draw(){
- $('app').innerHTML={home:home,act:actv,wal:dompet,me:saya}[S.tab]();
- var n=[['home','🏠','Beranda'],['act','🧾','Aktivitas'],['pay','▦','PAY'],['wal','👛','Dompet'],['me','👤','Saya']];
- $('nav').innerHTML=n.map(function(x){return x[0]==='pay'?'<button class="pay" onclick="toast(\'Scan QR tersedia di aplikasi seluler\')"><i>'+x[1]+'</i><span>PAY</span></button>':'<button class="'+(S.tab===x[0]?'on':'')+'" onclick="S.tab=\''+x[0]+'\';draw();scrollTo(0,0)"><i>'+x[1]+'</i>'+x[2]+'</button>'}).join('')}
+ $('app').innerHTML={home:home,act:actv,me:info}[S.tab]();
+ var n=[['home','🏠','Beranda'],['act','🧾','Pesanan'],['me','🏪','Info toko']];
+ $('nav').innerHTML=n.map(function(x){return '<button class="'+(S.tab===x[0]?'on':'')+'" onclick="S.tab=\''+x[0]+'\';draw();scrollTo(0,0)"><i>'+x[1]+'</i>'+x[2]+'</button>'}).join('')}
 
+function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+'\nTotal: '+rp(o.a)+'\nPembayaran: DANA\n\nSaya kirim bukti pembayaran di chat ini.'}
 function bayar(title,sub,amt){
- if(amt>S.saldo){open_('<h3>Saldo tidak cukup</h3><p style="color:var(--mut)">Total '+rp(amt)+', saldo kamu '+rp(S.saldo)+'. Top up dulu untuk melanjutkan.</p><button class="cta" onclick="topup()">Top up saldo</button>');return}
- S.saldo-=amt;S.tx.unshift({t:title,s:sub,a:-amt,d:fmt(new Date()),id:'KP'+Date.now().toString().slice(-9)});save();draw();
- open_('<div class="ok"><div>✅</div><h3>Pembayaran berhasil</h3><p style="color:var(--mut)">'+esc(title)+'<br>'+esc(sub)+'<br><b>'+rp(amt)+'</b></p></div><button class="cta" onclick="struk(0)">Lihat & cetak struk</button><button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="close_()">Selesai</button>')}
+ ordShow({id:'ZVX-'+Date.now().toString().slice(-8),t:title,s:sub,a:amt,d:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})})}
+function ordView(k){if(S.ord[k])ordShow(S.ord[k])}
+function ordShow(o){S.cur=o;
+ open_('<h3>Konfirmasi pesanan</h3><div class="list" style="margin:0 0 12px"><div class="row"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+'</small></div><div class="amt">'+rp(o.a)+'</div></div></div>'
+ +'<p style="color:var(--mut);font-size:14px;line-height:1.6">1. Bayar <b style="color:var(--tx)">'+rp(o.a)+'</b> lewat DANA'+(TOKO.dana?' ke <b style="color:var(--tx)">'+esc(TOKO.dana)+'</b> a.n. '+esc(TOKO.an):'')+'.<br>2. Kirim bukti bayar ke WhatsApp admin.<br>3. Pesanan diproses setelah pembayaran dicek.</p>'
+ +'<button class="cta" onclick="ordWa()">Kirim pesanan via WhatsApp</button>'
+ +(TOKO.dana?'<button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="try{navigator.clipboard.writeText(TOKO.dana);toast(\'Nomor DANA disalin\')}catch(e){}">Salin nomor DANA</button>':'')
+ +'<button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="close_()">Tutup</button>')}
+function ordWa(){var o=S.cur;if(!o)return;if(!S.ord.some(function(x){return x.id===o.id})){S.ord.unshift(o);save();draw()}wa(orderText(o))}
 
 var sel=null,mode='pulsa';
 function pulsa(){sel=null;mode='pulsa';pl()}
@@ -146,27 +160,19 @@ function pl(){
  var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),d:'Pulsa',p:v+3000}}):DATA;
  open_('<h3>Pulsa & Data</h3><div class="tabs"><button class="'+(mode==='pulsa'?'on':'')+'" onclick="mode=\'pulsa\';sel=null;pl()">Pulsa</button><button class="'+(mode==='data'?'on':'')+'" onclick="mode=\'data\';sel=null;pl()">Paket data</button></div>'
  +'<label for="no">Nomor ponsel</label><input id="no" inputmode="numeric" maxlength="14" placeholder="08xx xxxx xxxx" value="'+esc(S.phone)+'" oninput="S.phone=this.value.replace(/\\D/g,\'\');var o=opr(S.phone);$(\'op\').innerHTML=o?\'<span class=op>\'+o+\'</span>\':\'\';chk()"><div id="op">'+(opr(S.phone)?'<span class="op">'+opr(S.phone)+'</span>':'')+'</div>'
- +'<label>Pilih nominal</label><div class="chips">'+items.map(function(x,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';pl()">'+x.n+'<small>'+(mode==='pulsa'?'Bayar '+rp(x.p):x.d+' · '+rp(x.p))+'</small></div>'}).join('')+'</div>'
- +'<button class="cta" id="go" disabled onclick="goPulsa()">'+(sel!==null?'Bayar '+rp(items[sel].p):'Bayar')+'</button>');chk()}
+ +'<label>Pilih nominal</label><div class="chips">'+items.map(function(x,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';pl()">'+x.n+'<small>'+(mode==='pulsa'?rp(x.p):x.d+' · '+rp(x.p))+'</small></div>'}).join('')+'</div>'
+ +'<button class="cta" id="go" disabled onclick="goPulsa()">'+(sel!==null?'Pesan '+rp(items[sel].p):'Pesan')+'</button>');chk()}
 function chk(){var b=$('go');if(b)b.disabled=!(S.phone.length>=10&&sel!==null)}
 function goPulsa(){var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),p:v+3000}}):DATA;var x=items[sel];bayar((mode==='pulsa'?'Pulsa ':'')+x.n,S.phone+' · '+(opr(S.phone)||'Operator'),x.p)}
 
 var lid='';
 function listrik(){sel=null;ll()}
-function ll(){open_('<h3>Token listrik</h3><label for="id">ID pelanggan / nomor meter</label><input id="id" inputmode="numeric" maxlength="12" placeholder="11 atau 12 digit" value="'+esc(lid)+'" oninput="lid=this.value.replace(/\\D/g,\'\');lc()"><label>Nominal token</label><div class="chips">'+TOKEN.map(function(v,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';ll()">'+rp(v)+'<small>Bayar '+rp(TOKENP[v])+'</small></div>'}).join('')+'</div><button class="cta" id="lg" disabled onclick="bayar(\'Token listrik \'+rp(TOKEN[sel]),lid,TOKENP[TOKEN[sel]])">'+(sel!==null?'Bayar '+rp(TOKENP[TOKEN[sel]]):'Bayar')+'</button>');lc()}
+function ll(){open_('<h3>Token listrik</h3><label for="id">ID pelanggan / nomor meter</label><input id="id" inputmode="numeric" maxlength="12" placeholder="11 atau 12 digit" value="'+esc(lid)+'" oninput="lid=this.value.replace(/\\D/g,\'\');lc()"><label>Nominal token</label><div class="chips">'+TOKEN.map(function(v,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';ll()">'+rp(v)+'<small>'+rp(TOKENP[v])+'</small></div>'}).join('')+'</div><button class="cta" id="lg" disabled onclick="bayar(\'Token listrik \'+rp(TOKEN[sel]),lid,TOKENP[TOKEN[sel]])">'+(sel!==null?'Pesan '+rp(TOKENP[TOKEN[sel]]):'Pesan')+'</button>');lc()}
 function lc(){var b=$('lg');if(b)b.disabled=!(lid.length>=11&&sel!==null)}
 
 function jasa(){open_('<h3>Jasa online</h3><div class="list" style="margin:0">'+JASA.map(svc).join('')+'</div>')}
-function pesan(k){var j=JASA[k];open_('<h3>Pesan '+j.n+'</h3><p style="color:var(--mut)">'+j.d+'</p><label for="cat">Catatan untuk penyedia jasa</label><input id="cat" placeholder="Contoh: nama brand, warna, referensi"><button class="cta" onclick="bayar(\''+j.n+'\',\'Pesanan jasa\','+j.p+')">Bayar '+rp(j.p)+'</button>')}
+function pesan(k){var j=JASA[k];open_('<h3>Pesan '+j.n+'</h3><p style="color:var(--mut)">'+j.d+'</p><label for="cat">Catatan untuk penyedia jasa</label><input id="cat" placeholder="Contoh: nama brand, warna, referensi"><button class="cta" onclick="bayar(\''+j.n+'\',($(\'cat\').value.trim()||\'Pesanan jasa\'),'+j.p+')">Pesan '+rp(j.p)+'</button>')}
 
-function topup(){sel=null;tl()}
-function tl(){var V=[20000,50000,100000,200000,500000,1000000];open_('<h3>Top up saldo</h3><div class="chips">'+V.map(function(v,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';tl()">'+rp(v)+'</div>'}).join('')+'</div><p style="color:var(--mut);font-size:13px;margin-top:12px">Demo: saldo bertambah langsung tanpa pembayaran sungguhan.</p><button class="cta" '+(sel===null?'disabled':'')+' onclick="var v='+(sel!==null?V[sel]:0)+';S.saldo+=v;S.tx.unshift({t:\'Top up saldo\',s:\'Transfer bank\',a:v,d:new Date().toLocaleDateString(\'id-ID\',{day:\'numeric\',month:\'short\',hour:\'2-digit\',minute:\'2-digit\'})});save();draw();close_();toast(\'Top up berhasil\')">Top up</button>')}
-
-function kirim(){open_('<h3>Kirim saldo</h3><label for="kn">Nomor penerima</label><input id="kn" inputmode="numeric" placeholder="08xx xxxx xxxx"><label for="kj">Jumlah (Rp)</label><input id="kj" inputmode="numeric" placeholder="10000"><button class="cta" onclick="var n=$(\'kn\').value.replace(/\\D/g,\'\'),j=parseInt($(\'kj\').value.replace(/\\D/g,\'\'))||0;if(n.length<10||j<1000){toast(\'Isi nomor dan jumlah minimal Rp1.000\');return}bayar(\'Kirim saldo\',n,j)">Kirim</button>')}
-function fmt(d){return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}
-function struk(i){var t=S.tx[i];if(!t)return;var id=t.id||'KP'+('00000000'+(S.tx.length-i)).slice(-9),a=Math.abs(t.a);
- open_('<div class="receipt"><div class="rh"><b>ZVX STORE</b><div style="font-size:12px;margin-top:4px">Jl. Raya Bapuhbandung No. 5<br>Glagah, Lamongan</div><div style="margin-top:8px">Struk pembayaran</div></div><div class="rl"></div><div class="rr"><span>No. transaksi</span><b>'+id+'</b></div><div class="rr"><span>Waktu</span><b>'+esc(t.d)+'</b></div><div class="rr"><span>Layanan</span><b>'+esc(t.t)+'</b></div><div class="rr"><span>Tujuan</span><b>'+esc(t.s)+'</b></div><div class="rl"></div><div class="rr big"><span>Total</span><b>'+(t.a>0?'+':'')+rp(a)+'</b></div><div class="rr"><span>Metode</span><b>Saldo ZVX STORE</b></div><div class="rr"><span>Status</span><b>Berhasil</b></div><div class="rl"></div><div class="rf">Terima kasih. Simpan struk ini sebagai bukti pembayaran.</div></div><button class="cta" onclick="cetak()">Cetak struk</button><button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="close_()">Tutup</button>')}
-function cetak(){try{window.print()}catch(e){toast('Cetak tidak tersedia di browser ini')}}
 draw();
 try{if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js")}catch(e){}
 </script>
