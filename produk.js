@@ -68,26 +68,26 @@ var PRODUK = {
   // Wilayah E-Samsat yang kamu layani (ubah/tambah sesuai kebutuhan).
   samsat: ['Samsat JATIM', 'Samsat JATENG', 'Samsat JABAR', 'Samsat DIY', 'Samsat DKI JAKARTA', 'Samsat BANTEN', 'Samsat BALI'],
   adm: { bpjs: 3000, samsat: 3000, lain: 3000 },       // biaya admin tagihan
-  // VOUCHER GAME & digital. Tiap brand: i = ikon, n = nama, f = isian akun (kosongkan [] kalau produknya kode voucher),
+  // VOUCHER GAME & digital. Tiap brand: i = ikon emoji (cadangan), img = file logo di folder logo/, n = nama, f = isian akun (kosongkan [] kalau produknya kode voucher),
   // items = daftar [nama produk, harga jual]. Isian bertipe angka (t:'num') hanya menerima digit.
   // CATATAN: nama paket & harga di bawah hanya CONTOH. Ganti dengan daftar & harga asli tokomu.
   voucher: [
-    { i: '⚔️', n: 'Voucher MLBB', f: [{ l: 'User ID', ph: 'ID akun Mobile Legends', t: 'num' }, { l: 'Zone ID', ph: 'Contoh: 1234', t: 'num' }],
+    { i: '⚔️', n: 'Voucher MLBB', img: 'logo/mlbb.png', f: [{ l: 'User ID', ph: 'ID akun Mobile Legends', t: 'num' }, { l: 'Zone ID', ph: 'Contoh: 1234', t: 'num' }],
       items: [['86 Diamond', 22000], ['172 Diamond', 43000], ['257 Diamond', 64000], ['344 Diamond', 85000], ['706 Diamond', 170000]] },
-    { i: '🔥', n: 'Voucher Free Fire', f: [{ l: 'Player ID', ph: 'ID akun Free Fire', t: 'num' }],
+    { i: '🔥', n: 'Voucher Free Fire', img: 'logo/ff.png', f: [{ l: 'Player ID', ph: 'ID akun Free Fire', t: 'num' }],
       items: [['70 Diamond', 10500], ['140 Diamond', 20500], ['355 Diamond', 50000], ['720 Diamond', 100000]] },
-    { i: '🔫', n: 'Voucher PUBGM', f: [{ l: 'Player ID', ph: 'ID akun PUBG Mobile', t: 'num' }],
+    { i: '🔫', n: 'Voucher PUBGM', img: 'logo/pubgm.png', f: [{ l: 'Player ID', ph: 'ID akun PUBG Mobile', t: 'num' }],
       items: [['60 UC', 15500], ['325 UC', 80000], ['660 UC', 158000], ['1800 UC', 400000]] },
-    { i: '🏹', n: 'Voucher HoK', f: [{ l: 'Player ID', ph: 'ID akun Honor of Kings', t: 'num' }],
+    { i: '🏹', n: 'Voucher HoK', img: 'logo/hok.png', f: [{ l: 'Player ID', ph: 'ID akun Honor of Kings', t: 'num' }],
       items: [['80 Token', 15000], ['240 Token', 45000], ['400 Token', 75000], ['800 Token', 150000]] },
-    { i: '🧱', n: 'Voucher Roblox', f: [], items: [['80 Robux', 16000], ['400 Robux', 80000], ['800 Robux', 160000]] },
-    { i: '▶️', n: 'Kode Voucher Google Play', f: [],
+    { i: '🧱', n: 'Voucher Roblox', img: 'logo/roblox.png', f: [], items: [['80 Robux', 16000], ['400 Robux', 80000], ['800 Robux', 160000]] },
+    { i: '▶️', n: 'Kode Voucher Google Play', img: 'logo/gplay.png', f: [],
       items: [['Rp 5.000', 5000], ['Rp 10.000', 10000], ['Rp 20.000', 20000], ['Rp 30.000', 30000], ['Rp 50.000', 50000], ['Rp 75.000', 75000], ['Rp 100.000', 100000]] },
-    { i: '📺', n: 'Vidio Voucher', f: [],
+    { i: '📺', n: 'Vidio Voucher', img: 'logo/vidio.png', f: [],
       items: [['Ultimate Mobile 30 Hari', 100000], ['Ultimate All Screen 30 Hari', 180000], ['Ultimate Mobile 3 Bulan', 240000], ['Ultimate All Screen 3 Bulan', 420000]] },
-    { i: '🚂', n: 'Steam', f: [], items: [['Wallet Rp 12.000', 13000], ['Wallet Rp 45.000', 47000], ['Wallet Rp 60.000', 62000], ['Wallet Rp 90.000', 93000], ['Wallet Rp 120.000', 123000]] },
-    { i: '🎮', n: 'PSN Gift Card', f: [], items: [['Rp 100.000', 105000], ['Rp 150.000', 156000], ['Rp 250.000', 258000]] },
-    { i: '🎬', n: 'Dramabox', f: [], items: [['Membership 1 Minggu', 69000]] }
+    { i: '🚂', n: 'Steam', img: 'logo/steam.png', f: [], items: [['Wallet Rp 12.000', 13000], ['Wallet Rp 45.000', 47000], ['Wallet Rp 60.000', 62000], ['Wallet Rp 90.000', 93000], ['Wallet Rp 120.000', 123000]] },
+    { i: '🎮', n: 'PSN Gift Card', img: 'logo/psn.png', f: [], items: [['Rp 100.000', 105000], ['Rp 150.000', 156000], ['Rp 250.000', 258000]] },
+    { i: '🎬', n: 'Dramabox', img: 'logo/dramabox.png', f: [], items: [['Membership 1 Minggu', 69000]] }
   ],
   // Layanan di menu "Lainnya". Tiap layanan: i = ikon, n = nama, adm = biaya admin (opsional, default adm.lain),
   // f = isian form (urut tampil). Isian TERAKHIR dianggap nomor pelanggan/ID tagihan (disamarkan di riwayat pesanan).
