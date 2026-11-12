@@ -62,6 +62,7 @@ input:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px
 .tabs{display:flex;gap:8px;margin-bottom:6px}
 .tabs button{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--tx);cursor:pointer}
 .tabs .on{border-color:var(--pri);color:var(--pri);font-weight:700}
+.tabs.f{flex-wrap:wrap;margin-bottom:0}.tabs.f button{flex:1 1 auto;padding:7px 10px;font-size:13px}
 .op{display:inline-block;margin-top:6px;font-size:12px;background:var(--pri);color:#fff;border-radius:8px;padding:2px 8px}
 .svc{display:flex;gap:12px;align-items:center}
 .svc i{font-style:normal;font-size:26px;width:46px;height:46px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex:none}
@@ -101,12 +102,12 @@ function close_(){$('ov').classList.remove('on')}
 $('ov').addEventListener('click',function(e){if(e.target===$('ov'))close_()});
 function esc(x){return String(x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
-var JASA=PRODUK.jasa,PULSA=PRODUK.pulsa,DATA=PRODUK.data,TOKEN=PRODUK.token,TOKENP=PRODUK.tokenp,MU=PRODUK.markupPulsa;
+var JASA=PRODUK.jasa,PULSA=PRODUK.pulsa,TOKEN=PRODUK.token,TOKENP=PRODUK.tokenp,MU=PRODUK.markupPulsa;
 
 function opr(n){var p=n.slice(0,4);
  if(/^08(11|12|13|21|22|23|52|53|51)$/.test(p))return 'Telkomsel';
  if(/^08(14|15|16|55|56|57|58)$/.test(p))return 'Indosat';
- if(/^08(17|18|19|59|77|78)$/.test(p))return 'XL';
+ if(/^08(17|18|19|59|77|78|31|32|33|38)$/.test(p))return 'XL';
  if(/^08(95|96|97|98|99)$/.test(p))return 'Tri';
  if(/^08(81|82|83|84|85|86|87|88|89)$/.test(p))return 'Smartfren';return ''}
 
@@ -180,16 +181,41 @@ function smChk(){var n=$('sm3'),v=smVal();if(n.value!==v.nik)n.value=v.nik;$('sm
 function smGo(){var v=smVal();
  bayar('E-Samsat (cek tagihan)',v.np+' · '+v.sw+' · Mesin ••••'+v.ms.slice(-3)+' · NIK ••••'+v.nik.slice(-4),0,'Wilayah: '+v.sw+'\nNomor polisi: '+v.np+'\nNomor mesin: '+v.ms+'\nNIK: '+v.nik)}
 
-var sel=null,mode='pulsa';
-function pulsa(){sel=null;mode='pulsa';pl()}
-function pl(){
- var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),d:'Pulsa',p:v+MU}}):DATA;
- open_('<h3>Pulsa & Data</h3><div class="tabs"><button class="'+(mode==='pulsa'?'on':'')+'" onclick="mode=\'pulsa\';sel=null;pl()">Pulsa</button><button class="'+(mode==='data'?'on':'')+'" onclick="mode=\'data\';sel=null;pl()">Paket data</button></div>'
- +'<label for="no">Nomor ponsel</label><input id="no" inputmode="numeric" maxlength="14" placeholder="08xx xxxx xxxx" value="'+esc(S.phone)+'" oninput="S.phone=this.value.replace(/\\D/g,\'\');var o=opr(S.phone);$(\'op\').innerHTML=o?\'<span class=op>\'+o+\'</span>\':\'\';chk()"><div id="op">'+(opr(S.phone)?'<span class="op">'+opr(S.phone)+'</span>':'')+'</div>'
- +'<label>Pilih nominal</label><div class="chips">'+items.map(function(x,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="sel='+k+';pl()">'+x.n+'<small>'+(mode==='pulsa'?rp(x.p):x.d+' · '+rp(x.p))+'</small></div>'}).join('')+'</div>'
- +'<button class="cta" id="go" disabled onclick="goPulsa()">'+(sel!==null?'Pesan '+rp(items[sel].p):'Pesan')+'</button>');chk()}
-function chk(){var b=$('go');if(b)b.disabled=!(S.phone.length>=10&&sel!==null)}
-function goPulsa(){var items=mode==='pulsa'?PULSA.map(function(v){return {n:rp(v),p:v+MU}}):DATA;var x=items[sel];bayar((mode==='pulsa'?'Pulsa ':'')+x.n,S.phone+' · '+(opr(S.phone)||'Operator'),x.p)}
+var sel=null,mode='pulsa',fPer='semua',fJns='semua',lastOp='',JNS=[];
+function pulsa(){sel=null;mode='pulsa';fPer='semua';fJns='semua';pl()}
+function curItems(){
+ if(mode==='pulsa')return PULSA.map(function(v){return {n:rp(v),d:'Pulsa',p:v+MU}});
+ return (PRODUK.data[opr(S.phone)]||[]).filter(function(x){return (fPer==='semua'||x.per===fPer)&&(fJns==='semua'||x.j===fJns)})}
+function pkMsg(t){return '<p style="color:var(--mut);font-size:14px;margin-top:14px;line-height:1.5">'+t+'</p>'}
+function pkHtml(){
+ var it,h;
+ if(mode==='pulsa'){it=curItems();return '<label>Pilih nominal</label><div class="chips">'+it.map(function(x,k){return '<div class="chip'+(sel===k?' on':'')+'" onclick="pick('+k+')">'+x.n+'<small>'+rp(x.p)+'</small></div>'}).join('')+'</div>'}
+ var o=opr(S.phone);
+ if(!o)return pkMsg('Isi nomor ponsel dulu, nanti muncul paket data sesuai operatornya.');
+ var all=PRODUK.data[o]||[];
+ if(!all.length)return pkMsg('Paket data '+o+' belum tersedia di sini. Chat admin untuk pesan manual.');
+ JNS=[];all.forEach(function(x){if(JNS.indexOf(x.j)<0)JNS.push(x.j)});
+ var per=[['semua','Semua'],['harian','Harian'],['mingguan','Mingguan'],['bulanan','Bulanan']];
+ h='<label>Periode</label><div class="tabs f">'+per.map(function(x){return '<button class="'+(fPer===x[0]?'on':'')+'" onclick="setP(\''+x[0]+'\')">'+x[1]+'</button>'}).join('')+'</div>'
+ +'<label>Jenis kuota</label><div class="tabs f"><button class="'+(fJns==='semua'?'on':'')+'" onclick="setJ(-1)">Semua</button>'+JNS.map(function(x,i){return '<button class="'+(fJns===x?'on':'')+'" onclick="setJ('+i+')">'+esc(x)+'</button>'}).join('')+'</div>'
+ +'<label>Paket '+o+'</label>';
+ it=curItems();
+ if(!it.length)return h+pkMsg('Tidak ada paket untuk pilihan ini. Coba ganti periode atau jenis kuota.');
+ return h+'<div class="chips" style="grid-template-columns:1fr">'+it.map(function(x,k){return '<div class="chip'+(sel===k?' on':'')+'" style="text-align:left;padding:10px 12px" onclick="pick('+k+')"><b>'+esc(x.n)+'</b><small>'+esc(x.j)+' · '+esc(x.d)+' · '+rp(x.p)+'</small></div>'}).join('')+'</div>'}
+function pkDraw(){$('pk').innerHTML=pkHtml();var it=curItems(),b=$('go');b.textContent=(sel!==null&&it[sel])?'Pesan '+rp(it[sel].p):'Pesan';chk()}
+function pick(k){sel=k;pkDraw()}
+function setP(v){fPer=v;sel=null;pkDraw()}
+function setJ(i){fJns=i<0?'semua':JNS[i];sel=null;pkDraw()}
+function setMode(m){mode=m;sel=null;fPer='semua';fJns='semua';pl()}
+function phIn(el){S.phone=el.value.replace(/\D/g,'');var o=opr(S.phone),ch=o!==lastOp;lastOp=o;$('op').innerHTML=o?'<span class="op">'+o+'</span>':'';
+ if(mode==='data'&&ch){fJns='semua';sel=null;pkDraw()}else chk()}
+function pl(){lastOp=opr(S.phone);
+ open_('<h3>Pulsa & Data</h3><div class="tabs"><button class="'+(mode==='pulsa'?'on':'')+'" onclick="setMode(\'pulsa\')">Pulsa</button><button class="'+(mode==='data'?'on':'')+'" onclick="setMode(\'data\')">Paket data</button></div>'
+ +'<label for="no">Nomor ponsel</label><input id="no" inputmode="numeric" maxlength="14" placeholder="08xx xxxx xxxx" value="'+esc(S.phone)+'" oninput="phIn(this)"><div id="op">'+(lastOp?'<span class="op">'+lastOp+'</span>':'')+'</div>'
+ +'<div id="pk">'+pkHtml()+'</div>'
+ +'<button class="cta" id="go" disabled onclick="goPulsa()">Pesan</button>');chk()}
+function chk(){var b=$('go');if(b)b.disabled=!(S.phone.length>=10&&sel!==null&&curItems()[sel])}
+function goPulsa(){var x=curItems()[sel];if(!x)return;bayar((mode==='pulsa'?'Pulsa ':'')+x.n,S.phone+' · '+(opr(S.phone)||'Operator')+(mode==='data'?' · '+x.j+' · '+x.d:''),x.p)}
 
 var lid='';
 function listrik(){sel=null;ll()}
