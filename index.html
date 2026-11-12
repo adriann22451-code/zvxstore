@@ -123,7 +123,7 @@ function home(){
  +'<h2>Pesanan terakhir</h2>'+ordList(S.ord.slice(0,3));
  return h}
 function mi(i,n,f){return '<button onclick="'+f+'"><i>'+i+'</i>'+n+'</button>'}
-function svc(j,k){return '<div class="row"><div class="svc"><i>'+j.i+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+rp(j.p)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
+function svc(j,k){return '<div class="row"><div class="svc"><i>'+j.i+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+jPrice(j)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
 var TOKO=PRODUK.toko,PAY=PRODUK.pay;
 function payOf(k){for(var i=0;i<PAY.length;i++)if(PAY[i].k===k)return PAY[i];return PAY[1]}
 function waNo(){var n=String(TOKO.wa||'').replace(/\D/g,'');if(n.indexOf('0')===0)n='62'+n.slice(1);return n}
@@ -248,7 +248,21 @@ function ll(){open_('<h3>Token listrik</h3><label for="id">ID pelanggan / nomor 
 function lc(){var b=$('lg');if(b)b.disabled=!(lid.length>=11&&sel!==null)}
 
 function jasa(){open_('<h3>Jasa online</h3><div class="list" style="margin:0">'+JASA.map(svc).join('')+'</div>')}
-function pesan(k){var j=JASA[k];open_('<h3>Pesan '+j.n+'</h3><p style="color:var(--mut)">'+j.d+'</p><label for="cat">Catatan untuk penyedia jasa</label><input id="cat" placeholder="Contoh: nama brand, warna, referensi"><button class="cta" onclick="bayar(\''+j.n+'\',($(\'cat\').value.trim()||\'Pesanan jasa\'),'+j.p+')">Pesan '+rp(j.p)+'</button>')}
+var jsK=0,jsOp=null;
+function jPrice(j){return j.opsi?'mulai '+rp(Math.min.apply(null,j.opsi.map(function(o){return o[1]}))):(j.p?rp(j.p):'harga sesuai kebutuhan')}
+function jFields(j){return j.f||[{l:'Catatan untuk penyedia jasa',ph:j.ph||'Contoh: nama brand, warna, referensi'}]}
+function pesan(k){jsK=k;jsOp=null;var j=JASA[k];
+ open_('<h3>'+j.i+' '+esc(j.n)+'</h3><p style="color:var(--mut)">'+esc(j.d)+'</p>'
+ +(j.contoh?'<label>Contoh aplikasi yang sudah jadi</label><div class="list" style="margin:0 0 4px">'+j.contoh.filter(function(c){return /^https:\/\//.test(c.u)}).map(function(c){return '<div class="row"><div><b>'+esc(c.n)+'</b><small>'+esc(c.d)+'</small></div><a class="btn2" href="'+esc(c.u)+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Lihat</a></div>'}).join('')+'</div>':'')
+ +(j.opsi?'<label>Pilih paket</label><div class="chips" style="grid-template-columns:repeat(2,1fr)">'+j.opsi.map(function(o,i){return '<div class="chip jso" onclick="jsPick('+i+')">'+esc(o[0])+'<small>'+rp(o[1])+'</small></div>'}).join('')+'</div>':'')
+ +jFields(j).map(function(x,i){return '<label for="jf'+i+'">'+esc(x.l)+(x.r?'':' (opsional)')+'</label><input id="jf'+i+'" placeholder="'+esc(x.ph||'')+'" autocomplete="off" oninput="jsChk()">'}).join('')
+ +'<p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">'+(j.p===0&&!j.opsi?'Harga disesuaikan kebutuhan. Admin akan membalas dengan penawaran lewat WhatsApp.':'Detail lain dibahas dengan admin lewat WhatsApp.')+(j.opsi?' Jangan tulis password di sini, admin akan memberi tahu cara aman mengirim data akun.':'')+'</p>'
+ +'<button class="cta" id="jsgo" disabled onclick="jsGo()">'+jsLabel()+'</button>');jsChk()}
+function jsLabel(){var j=JASA[jsK],pr=j.opsi?(jsOp!==null?j.opsi[jsOp][1]:null):j.p;return pr?'Pesan '+rp(pr):(j.opsi?'Pilih paket dulu':'Minta penawaran')}
+function jsVals(){return jFields(JASA[jsK]).map(function(x,i){return $('jf'+i).value.trim()})}
+function jsChk(){var j=JASA[jsK],v=jsVals();$('jsgo').disabled=!((!j.opsi||jsOp!==null)&&jFields(j).every(function(x,i){return !x.r||v[i].length>=2}))}
+function jsPick(i){jsOp=i;var c=document.querySelectorAll('.jso');for(var m=0;m<c.length;m++)c[m].className='chip jso'+(m===i?' on':'');$('jsgo').textContent=jsLabel();jsChk()}
+function jsGo(){var j=JASA[jsK],v=jsVals().filter(Boolean),pr=j.opsi?j.opsi[jsOp][1]:j.p;bayar(j.n+(j.opsi?' · '+j.opsi[jsOp][0]:''),v.join(' · ')||'Pesanan jasa',pr)}
 
 draw();
 try{if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js")}catch(e){}

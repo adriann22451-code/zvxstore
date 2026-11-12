@@ -105,12 +105,22 @@ var PRODUK = {
     { i: '🎓', n: 'Biaya Pendidikan', f: [{ l: 'Nama sekolah / kampus', ph: 'Nama institusi' }, { l: 'Nomor induk / ID pembayaran', ph: 'NIS / NIM / ID bayar' }] }
   ],
   jasa: [
-    { i: '🎨', n: 'Desain logo', d: '3 konsep, revisi 2x', p: 150000 },
-    { i: '🎬', n: 'Edit video pendek', d: 'Hingga 60 detik', p: 75000 },
-    { i: '🌐', n: 'Website company profile', d: '1 halaman responsif', p: 500000 },
-    { i: '✍️', n: 'Penulisan konten', d: '5 artikel, 500 kata', p: 125000 },
-    { i: '📸', n: 'Edit foto produk', d: '10 foto, latar bersih', p: 50000 },
-    { i: '📈', n: 'Kelola media sosial', d: '12 postingan per bulan', p: 350000 }
+    // Jasa bisa punya: p = harga tetap (0 = harga sesuai kebutuhan, admin kirim penawaran lewat WhatsApp),
+    // opsi = pilihan paket [nama, harga], f = isian form (r:true = wajib),
+    // contoh = daftar karya yang sudah jadi [{ n: nama, d: keterangan, u: link https }]. Harga opsi di bawah hanya CONTOH.
+    { i: '📱', n: 'Jasa bikin aplikasi', d: 'Web app, miniapp Telegram, dan lainnya', p: 0,
+      f: [{ l: 'Jenis aplikasi', ph: 'Contoh: aplikasi kasir, toko online, game', r: true }, { l: 'Fitur yang dibutuhkan', ph: 'Contoh: login, laporan, cetak struk' }],
+      contoh: [
+        { n: 'Monster Hunt', d: 'Game berburu monster. Tersedia web app dan miniapp Telegram.', u: 'https://pixel-hunt-pi.vercel.app/' },
+        { n: 'Relic Hunt', d: 'Game web app berburu monster dan melindungi desa.', u: 'https://adriann22451-code.github.io/relic-hunt/' },
+        { n: 'AI Agent Office', d: 'Buat AI agent sendiri secara virtual, berbasis web app game.', u: 'https://ai-agent-office-ivory.vercel.app/' },
+        { n: 'Aether Mining', d: 'Game mining, miniapp Telegram.', u: 'https://aether-mining.vercel.app/' },
+        { n: 'Rupa Mine', d: 'Game idle mining, miniapp Telegram.', u: 'https://rupa-mine.vercel.app/' },
+        { n: 'Core Mining', d: 'Game mining bertema CPU dan GPU, miniapp Telegram.', u: 'https://core-mining-app.vercel.app/' }
+      ] },
+    { i: '🎮', n: 'Jasa rawat / joki akun game', d: 'Rawat akun: login harian, misi, event',
+      opsi: [['Mingguan', 50000], ['Bulanan', 150000]],
+      f: [{ l: 'Nama game', ph: 'Contoh: Mobile Legends', r: true }, { l: 'Nickname / ID akun', ph: 'Nickname atau ID (bukan password)', r: true }, { l: 'Catatan', ph: 'Target atau permintaan khusus' }] }
   ],
   // Isi no rekening/e-wallet. Kosongkan jika belum ada (admin kirim via WhatsApp).
   pay: [
