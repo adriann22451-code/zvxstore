@@ -67,7 +67,22 @@ var PRODUK = {
   bpjs: ['Ketenagakerjaan Bukan Penerima Upah & Pekerja Migran', 'Ketenagakerjaan Penerima Upah', 'Kesehatan', 'BPJS Denda'],
   // Wilayah E-Samsat yang kamu layani (ubah/tambah sesuai kebutuhan).
   samsat: ['Samsat JATIM', 'Samsat JATENG', 'Samsat JABAR', 'Samsat DIY', 'Samsat DKI JAKARTA', 'Samsat BANTEN', 'Samsat BALI'],
-  adm: { bpjs: 3000, samsat: 3000 },       // biaya admin tagihan
+  adm: { bpjs: 3000, samsat: 3000, lain: 3000 },       // biaya admin tagihan
+  // Layanan di menu "Lainnya". Tiap layanan: i = ikon, n = nama, adm = biaya admin (opsional, default adm.lain),
+  // f = isian form (urut tampil). Isian TERAKHIR dianggap nomor pelanggan/ID tagihan (disamarkan di riwayat pesanan).
+  // Tipe isian: t:'num' = angka saja, o:[...] = pilihan dropdown, selain itu teks bebas.
+  lain: [
+    { i: '⚡', n: 'PLN Non Taglis', f: [{ l: 'Nomor registrasi', ph: 'Nomor registrasi PLN', t: 'num' }] },
+    { i: '💧', n: 'Air PDAM', f: [{ l: 'Nama PDAM / wilayah', ph: 'Contoh: PDAM Lamongan' }, { l: 'Nomor pelanggan', ph: 'ID pelanggan PDAM', t: 'num' }] },
+    { i: '☎️', n: 'Telkom', f: [{ l: 'Nomor telepon / pelanggan', ph: 'Contoh: 0322xxxxxx', t: 'num' }] },
+    { i: '🔥', n: 'PGN Gas', f: [{ l: 'ID pelanggan', ph: 'ID pelanggan PGN', t: 'num' }] },
+    { i: '📡', n: 'Internet & TV Kabel', f: [{ l: 'Penyedia', o: ['IndiHome', 'Biznet', 'First Media', 'MNC Play', 'Lainnya (tulis di catatan WA)'] }, { l: 'Nomor pelanggan', ph: 'ID pelanggan', t: 'num' }] },
+    { i: '📱', n: 'Pascabayar', f: [{ l: 'Operator', o: ['Telkomsel Halo', 'Indosat', 'XL', 'Tri', 'Smartfren'] }, { l: 'Nomor ponsel', ph: '08xx xxxx xxxx', t: 'num' }] },
+    { i: '🏢', n: 'IPL', f: [{ l: 'Nama perumahan / apartemen', ph: 'Nama lokasi' }, { l: 'Nomor unit / ID pelanggan', ph: 'Contoh: A-12' }] },
+    { i: '🛡️', n: 'Bayar Asuransi', f: [{ l: 'Nama asuransi', ph: 'Nama perusahaan asuransi' }, { l: 'Nomor polis', ph: 'Nomor polis' }] },
+    { i: '📅', n: 'Bayar Cicilan', f: [{ l: 'Perusahaan pembiayaan', ph: 'Contoh: FIF, Adira' }, { l: 'Nomor kontrak', ph: 'Nomor kontrak / perjanjian' }] },
+    { i: '🎓', n: 'Biaya Pendidikan', f: [{ l: 'Nama sekolah / kampus', ph: 'Nama institusi' }, { l: 'Nomor induk / ID pembayaran', ph: 'NIS / NIM / ID bayar' }] }
+  ],
   jasa: [
     { i: '🎨', n: 'Desain logo', d: '3 konsep, revisi 2x', p: 150000 },
     { i: '🎬', n: 'Edit video pendek', d: 'Hingga 60 detik', p: 75000 },

@@ -115,7 +115,7 @@ function home(){
  var h='<div class="hero"><div class="hd"><div class="brand"><img src="icon-192.png" alt="Logo ZVX STORE"><div><b>ZVX STORE</b><small>Pulsa · Token · Jasa Online</small></div></div><button class="chat" onclick="wa()">💬 Chat</button></div><h1>Mau beli apa hari ini?</h1></div>'
  +'<div class="box up"><div class="grid">'
  +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
- +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"bpjs()")+mi('🚗','E-Samsat',"samsat()")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
+ +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"bpjs()")+mi('🚗','E-Samsat',"samsat()")+mi('⋯','Lainnya','lain()')
  +'</div></div>'
  +'<div class="promo"><b>Pulsa mulai '+rp(PULSA[0]+MU)+'</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
@@ -168,6 +168,18 @@ function bpjs(){
 function bjChk(){var n=$('bj1'),d=n.value.replace(/\D/g,'');if(n.value!==d)n.value=d;$('bjgo').disabled=!(d.length>=10&&d.length<=16)}
 function bjGo(){var j=$('bj').value,va=$('bj1').value.replace(/\D/g,''),b=$('bj2').value;
  bayar((/^BPJS/.test(j)?j:'BPJS '+j)+' (cek tagihan)','VA ••••'+va.slice(-4)+' · '+b+' bulan',0,'Jenis: '+(/^BPJS/.test(j)?j:'BPJS '+j)+'\nNomor VA: '+va+'\nIuran: '+b+' bulan')}
+var LN=PRODUK.lain||[],lnK=0;
+function lain(){open_('<h3>Layanan lainnya</h3><div class="grid">'+LN.map(function(x,k){return '<button onclick="lnForm('+k+')"><i>'+x.i+'</i>'+esc(x.n)+'</button>'}).join('')+'</div>')}
+function lnForm(k){lnK=k;var x=LN[k];
+ open_('<h3>'+x.i+' '+esc(x.n)+'</h3>'+x.f.map(function(f,i){var id='ln'+i,h='<label for="'+id+'">'+esc(f.l)+'</label>';
+  if(f.o)return h+'<select id="'+id+'">'+f.o.map(function(o){return '<option>'+esc(o)+'</option>'}).join('')+'</select>';
+  return h+'<input id="'+id+'" '+(f.t==='num'?'inputmode="numeric" ':'')+'placeholder="'+esc(f.ph||'')+'" autocomplete="off" oninput="lnChk()">'}).join('')
+ +'<p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(x.adm||ADM.lain)+'. Admin akan mengecek tagihan dan membalas lewat WhatsApp. Nomor pelanggan hanya dikirim ke WhatsApp admin dan tidak disimpan utuh di perangkat ini.</p>'
+ +'<button class="cta" id="lngo" disabled onclick="lnGo()">Cek Tagihan</button><button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="lain()">Kembali</button>');lnChk()}
+function lnVals(){return LN[lnK].f.map(function(f,i){var e=$('ln'+i),v=e.value.trim();if(f.t==='num'){var d=v.replace(/\D/g,'');if(e.value!==d)e.value=d;v=d}return v})}
+function lnChk(){var x=LN[lnK],v=lnVals();$('lngo').disabled=!x.f.every(function(f,i){return f.o?true:v[i].length>=(f.t==='num'?6:3)})}
+function lnGo(){var x=LN[lnK],v=lnVals(),n=v.length-1,id=v[n];
+ bayar(x.n+' (cek tagihan)',v.slice(0,n).concat(['ID ••••'+id.slice(-4)]).join(' · '),0,'Layanan: '+x.n+'\n'+x.f.map(function(f,i){return f.l+': '+v[i]}).join('\n'))}
 var SW=PRODUK.samsat||[];
 function samsat(){
  open_('<h3>E-Samsat</h3><label for="sw">Pilih wilayah</label><select id="sw">'+SW.map(function(w){return '<option>'+esc(w)+'</option>'}).join('')+'</select>'
