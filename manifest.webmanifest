@@ -1,7 +1,7 @@
 {
   "name": "ZVX STORE",
   "short_name": "ZVX STORE",
-  "description": "Pulsa, data, listrik, dan jasa online",
+  "description": "Pulsa, token listrik, dan jasa online ZVX STORE",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

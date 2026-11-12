@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin – ZVX STORE</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1f7ae0">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#f2f5fa;--card:#fff;--tx:#14213d;--mut:#6b7a90;--pri:#1f7ae0;--line:#e3e9f2;--ok:#16a34a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1522;--card:#18212f;--tx:#e8eef7;--mut:#8a99b0;--line:#26324a;--pri:#4a9bf0}}
+:root[data-theme="dark"]{--bg:#0e1522;--card:#18212f;--tx:#e8eef7;--mut:#8a99b0;--line:#26324a;--pri:#4a9bf0}
+*{box-sizing:border-box;margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--tx)}
+body{max-width:520px;margin:0 auto;min-height:100vh;padding:0 14px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 4px 10px}
+.top b{font-size:20px;display:block}.top small{color:var(--mut)}
+.ic{background:var(--card);border:1px solid var(--line);border-radius:12px;width:42px;height:42px;font-size:20px;cursor:pointer}
+.seg{display:flex;background:var(--card);border-radius:14px;padding:4px;border:1px solid var(--line)}
+.seg button{flex:1;padding:10px;border:0;border-radius:10px;background:none;color:var(--mut);font-size:15px;cursor:pointer}
+.seg .on{background:var(--pri);color:#fff;font-weight:700}
+.box{background:var(--card);border-radius:18px;padding:6px 16px 18px;margin-top:14px;border:1px solid var(--line)}
+h2{font-size:16px;margin:22px 4px 10px}
+label{font-size:13px;color:var(--mut);display:block;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;background:var(--bg);color:var(--tx)}
+textarea{resize:vertical;min-height:64px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
+.jn,.chips{display:flex;flex-wrap:wrap;gap:8px}
+.jn button,.chip{border:1.5px solid var(--line);background:var(--bg);color:var(--tx);border-radius:12px;padding:9px 12px;font-size:14px;cursor:pointer;text-align:center}
+.chip small{display:block;color:var(--mut);font-size:11px;margin-top:2px}
+.jn .on,.chip.on{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 14%,var(--card));font-weight:700}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.btn{padding:13px;border:0;border-radius:14px;background:var(--pri);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.btn.alt{background:var(--card);color:var(--tx);border:1.5px solid var(--line)}
+.btn.red{color:#dc2626}
+.pv{background:var(--card);border-radius:18px;padding:16px;border:1px solid var(--line);display:flex;justify-content:center;overflow-x:auto}
+.receipt{background:#fff;color:#111;width:300px;padding:16px;font-family:"Courier New",monospace;font-size:12.5px;line-height:1.35;border:1px dashed #999;flex:none}
+.receipt *{font-family:inherit}
+.rh{text-align:center}.rh b{font-size:18px;display:block}.sm{font-size:11.5px;margin-top:3px}
+.rl{border-top:1px dashed #777;margin:9px 0}
+.rc{text-align:center;font-weight:700;margin-bottom:6px}
+.rr{display:flex;justify-content:space-between;gap:10px;margin:3px 0}
+.rr span{color:#555;flex:none}.rr b{text-align:right;word-break:break-word}
+.rr.big{font-size:15px}
+.tok{border:1.5px solid #111;border-radius:6px;padding:8px;margin:8px 0;text-align:center}
+.tok span{display:block;font-size:11px;color:#555}.tok b{font-size:17px;letter-spacing:1px;word-break:break-word}
+.rf{text-align:center;font-size:11.5px;color:#444}
+.li{display:flex;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.li:last-child{border:0}.li small{display:block;color:var(--mut);margin-top:2px}.li b{white-space:nowrap}
+.list{background:var(--card);border-radius:18px;border:1px solid var(--line);overflow:hidden}
+.empty{padding:30px 16px;text-align:center;color:var(--mut)}
+.sum{background:var(--pri);color:#fff;border-radius:18px;padding:16px;margin-top:14px}.sum b{font-size:24px;display:block;margin-top:2px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:10}.ov.on{display:block}
+.sheet{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;max-height:92vh;overflow:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px))}
+.sheet h3{margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#14213d;color:#fff;padding:11px 18px;border-radius:24px;font-size:14px;z-index:20;display:none;max-width:90%}
+#pa{display:none}
+body.locked>*:not(#lock){display:none!important}
+#lock{display:none}
+body.locked #lock{display:block;max-width:360px;margin:12vh auto 0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+#lock h3{margin-bottom:4px}#lock p{color:var(--mut);font-size:13px;margin-top:10px}#lock .err{color:#dc2626;font-size:14px;margin-top:10px;min-height:18px}
+@media print{body>*:not(#pa){display:none!important}#pa{display:block}body{padding:0;background:#fff;max-width:none}.receipt{width:var(--w,58mm);border:0;margin:0 auto;padding:2mm}@page{margin:3mm}}
+</style>
+</head>
+<body class="locked">
+<div id="lock"></div>
+<div class="top"><div><b>ZVX STORE</b><small>Menu admin</small></div><div style="display:flex;gap:8px"><a class="ic" href="./" aria-label="Kembali ke toko" style="display:grid;place-items:center;text-decoration:none">🏠</a><button class="ic" id="lockbtn" aria-label="Kunci menu admin">🔒</button><button class="ic" id="gear" aria-label="Pengaturan toko">⚙️</button></div></div>
+<div class="seg" id="seg"><button data-t="buat" class="on">Buat struk</button><button data-t="riw">Riwayat</button></div>
+
+<main id="v-buat">
+ <div class="box" id="form">
+  <label>Jenis layanan</label><div class="jn" id="jn"></div>
+  <div id="dyn"></div>
+  <label for="f-harga">Harga jual (Rp)</label><input id="f-harga" inputmode="numeric" placeholder="53000">
+  <label for="f-nama">Nama pembeli (opsional)</label><input id="f-nama" placeholder="Contoh: Budi">
+  <label for="f-metode">Metode bayar</label>
+  <select id="f-metode"><option>DANA</option><option>Tunai</option><option>Transfer bank</option><option>QRIS</option><option>ShopeePay</option><option>Lainnya</option></select>
+ </div>
+ <h2>Pratinjau struk</h2>
+ <div class="pv"><div id="rc"></div></div>
+ <div class="btns">
+  <button class="btn" id="b-save">Simpan struk</button>
+  <button class="btn" id="b-print">Cetak</button>
+  <button class="btn alt" id="b-wa">Kirim WhatsApp</button>
+  <button class="btn alt" id="b-new">Struk baru</button>
+ </div>
+</main>
+
+<main id="v-riw" hidden></main>
+<div id="pa"></div>
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+const ld=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const hex=b=>Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+const hash=async(s,salt)=>hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+':'+s)));
+window.setPw=async p=>{const salt=hex(crypto.getRandomValues(new Uint8Array(8)));const h=await hash(p,salt);try{localStorage.setItem('zvx_pw',JSON.stringify({salt:salt,h:h}))}catch(e){}};
+document.getElementById('lockbtn').onclick=()=>{try{sessionStorage.removeItem('zvx_ok')}catch(e){}location.reload()};
+const box=document.getElementById('lock');
+const open=()=>{try{sessionStorage.setItem('zvx_ok','1')}catch(e){}document.body.classList.remove('locked')};
+let ok=false;try{ok=sessionStorage.getItem('zvx_ok')==='1'&&!!ld('zvx_pw')}catch(e){}
+if(ok){open();return}
+if(!(window.crypto&&crypto.subtle)){box.innerHTML='<h3>Menu admin</h3><p>Menu ini butuh koneksi aman (https). Buka lewat alamat Vercel kamu.</p>';return}
+const cfg=ld('zvx_pw');
+if(!cfg){
+ box.innerHTML='<h3>Buat sandi admin</h3><p>Sandi ini dipakai untuk membuka menu admin di perangkat ini.</p><label for="lk1">Sandi baru</label><input id="lk1" type="password" autocomplete="new-password"><label for="lk2">Ulangi sandi</label><input id="lk2" type="password" autocomplete="new-password"><div class="err" id="lke"></div><button class="btn" style="width:100%" id="lkg">Simpan dan masuk</button>';
+ document.getElementById('lkg').onclick=async()=>{const a=document.getElementById('lk1').value,b=document.getElementById('lk2').value,e=document.getElementById('lke');
+  if(a.length<6){e.textContent='Sandi minimal 6 karakter.';return}
+  if(a!==b){e.textContent='Kedua sandi tidak sama.';return}
+  await window.setPw(a);open()}
+}else{
+ box.innerHTML='<h3>Menu admin</h3><p>Masukkan sandi untuk membuka menu admin.</p><label for="lk1">Sandi</label><input id="lk1" type="password" autocomplete="current-password"><div class="err" id="lke"></div><button class="btn" style="width:100%" id="lkg">Buka</button><p>Lupa sandi? Hapus data situs ini di pengaturan browser. Riwayat struk di perangkat ini ikut terhapus.</p>';
+ const go=async()=>{const e=document.getElementById('lke');const h=await hash(document.getElementById('lk1').value,cfg.salt);
+  if(h===cfg.h){open();return}
+  e.textContent='Sandi salah.';await new Promise(r=>setTimeout(r,800))};
+ document.getElementById('lkg').onclick=go;
+ document.getElementById('lk1').addEventListener('keydown',ev=>{if(ev.key==='Enter')go()})
+}
+})();
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rp=n=>'Rp'+Math.round(n||0).toLocaleString('id-ID');
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const fmt=t=>{const d=new Date(t);return d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+' '+d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})};
+const fmtTok=s=>String(s).replace(/\D/g,'').replace(/(\d{4})(?=\d)/g,'$1 ');
+const br=s=>esc(s).replace(/\n/g,'<br>');
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2200)}
+
+const DEF={nama:'ZVX STORE',alamat:'Jl. Raya Bapuhbandung No. 5\nGlagah, Lamongan',hp:'',foot:'Terima kasih sudah berbelanja.\nSimpan struk ini sebagai bukti pembayaran.',kertas:'58'};
+let ST=Object.assign({},DEF,ld('zvx_toko',{})),HIS=ld('zvx_struk',[]),CNT=ld('zvx_cnt',0);
+const JENIS={pulsa:'Pulsa',data:'Paket data',listrik:'Token listrik',jasa:'Jasa online',lain:'Lainnya'};
+const NOM={pulsa:[[5000,8000],[10000,13000],[20000,23000],[25000,28000],[50000,53000],[100000,103000]],listrik:[[20000,23000],[50000,53000],[100000,103000],[200000,203000],[500000,510000]]};
+const nm=(j,n)=>(j==='pulsa'?'Pulsa ':'Token listrik ')+n.toLocaleString('id-ID');
+let F={jenis:'listrik',tujuan:'',item:'',harga:0,nama:'',metode:'DANA',token:'',plg:'',kwh:'',ket:''},saved=null;
+
+function fld(k,label,ph,im){return `<label for="f-${k}">${label}</label><input id="f-${k}" value="${esc(F[k])}" placeholder="${esc(ph||'')}" ${im?'inputmode="'+im+'"':''} autocomplete="off">`}
+function dyn(){
+ const j=F.jenis;let h='';
+ if(NOM[j])h+=`<label>Pilih nominal (harga jual terisi otomatis)</label><div class="chips">${NOM[j].map(([n,p])=>`<div class="chip${F.item===nm(j,n)?' on':''}" data-n="${n}" data-p="${p}">${n.toLocaleString('id-ID')}<small>${rp(p)}</small></div>`).join('')}</div>`;
+ if(j==='pulsa')h+=fld('tujuan','Nomor HP','08xx xxxx xxxx','numeric')+fld('item','Produk','Pulsa 10.000');
+ if(j==='data')h+=fld('tujuan','Nomor HP','08xx xxxx xxxx','numeric')+fld('item','Nama paket','Data 8 GB 30 hari');
+ if(j==='listrik')h+=fld('tujuan','ID pelanggan / nomor meter','12 digit','numeric')+fld('plg','Nama pelanggan (opsional)','')+fld('token','Nomor token (20 digit)','1234 5678 9012 3456 7890','numeric')+fld('kwh','Jumlah kWh (opsional)','Contoh: 36,5','decimal')+fld('item','Produk','Token listrik 50.000');
+ if(j==='jasa')h+=fld('item','Nama jasa','Desain logo')+fld('ket','Catatan (opsional)','');
+ if(j==='lain')h+=fld('item','Nama produk','')+fld('tujuan','Tujuan (opsional)','');
+ $('dyn').innerHTML=h}
+function jn(){$('jn').innerHTML=Object.keys(JENIS).map(k=>`<button data-j="${k}" class="${F.jenis===k?'on':''}">${JENIS[k]}</button>`).join('')}
+
+const pad=(n,l)=>String(n).padStart(l,'0');
+function nextId(){const d=new Date();return 'ZVX-'+String(d.getFullYear()).slice(2)+pad(d.getMonth()+1,2)+pad(d.getDate(),2)+'-'+pad(CNT+1,3)}
+function cur(){return saved||Object.assign({},F,{id:nextId(),t:Date.now()})}
+
+function rcHTML(r){
+ const row=(a,b)=>b?`<div class="rr"><span>${a}</span><b>${esc(b)}</b></div>`:'';
+ const tl={pulsa:'Nomor HP',data:'Nomor HP',listrik:'ID pelanggan',lain:'Tujuan'}[r.jenis];
+ return `<div class="receipt"><div class="rh"><b>${esc(ST.nama)}</b><div class="sm">${br(ST.alamat)}${ST.hp?'<br>Telp '+esc(ST.hp):''}</div></div><div class="rl"></div><div class="rc">STRUK PEMBAYARAN</div>`
+ +row('No. transaksi',r.id)+row('Waktu',fmt(r.t))+row('Pembeli',r.nama)+row('Layanan',JENIS[r.jenis])+row('Produk',r.item)
+ +(tl?row(tl,r.tujuan):'')+(r.jenis==='listrik'?row('Nama',r.plg):'')+row('Catatan',r.ket)
+ +(r.jenis==='listrik'&&r.token?`<div class="tok"><span>NOMOR TOKEN</span><b>${esc(fmtTok(r.token))}</b></div>`+row('Jumlah kWh',r.kwh):'')
+ +`<div class="rl"></div><div class="rr big"><span>TOTAL</span><b>${rp(r.harga)}</b></div>`+row('Metode',r.metode)+row('Status','Berhasil')
+ +`<div class="rl"></div><div class="rf">${br(ST.foot)}</div></div>`}
+function waText(r){
+ const L=['*'+ST.nama+'*',ST.alamat,'','*STRUK PEMBAYARAN*','No: '+r.id,'Waktu: '+fmt(r.t)];
+ if(r.nama)L.push('Pembeli: '+r.nama);
+ L.push('Layanan: '+JENIS[r.jenis],'Produk: '+r.item);
+ if(r.tujuan)L.push((r.jenis==='listrik'?'ID pelanggan: ':r.jenis==='lain'?'Tujuan: ':'Nomor HP: ')+r.tujuan);
+ if(r.jenis==='listrik'&&r.plg)L.push('Nama: '+r.plg);
+ if(r.ket)L.push('Catatan: '+r.ket);
+ if(r.jenis==='listrik'&&r.token){L.push('','*NOMOR TOKEN*','*'+fmtTok(r.token)+'*');if(r.kwh)L.push('kWh: '+r.kwh)}
+ L.push('','*TOTAL: '+rp(r.harga)+'*','Metode: '+r.metode,'Status: Berhasil','',ST.foot);
+ return L.join('\n')}
+
+function preview(){$('rc').innerHTML=rcHTML(cur())}
+function commit(){
+ if(saved)return saved;
+ if(!F.item.trim()||!F.harga){toast('Isi nama produk dan harga jual dulu');return null}
+ const r=Object.assign({},F,{id:nextId(),t:Date.now()});CNT++;HIS.unshift(r);sv('zvx_struk',HIS);sv('zvx_cnt',CNT);saved=r;preview();return r}
+function doPrint(r){$('pa').innerHTML=rcHTML(r);document.body.style.setProperty('--w',ST.kertas+'mm');try{window.print()}catch(e){toast('Cetak tidak tersedia di browser ini')}}
+function doWa(r){window.open('https://wa.me/?text='+encodeURIComponent(waText(r)),'_blank')}
+
+$('form').addEventListener('input',e=>{const id=e.target.id;if(id.indexOf('f-')!==0)return;const k=id.slice(2);F[k]=k==='harga'?(parseInt(e.target.value.replace(/\D/g,''))||0):e.target.value;saved=null;preview()});
+$('form').addEventListener('click',e=>{
+ const b=e.target.closest('[data-j]');
+ if(b){Object.assign(F,{jenis:b.dataset.j,item:'',tujuan:'',token:'',plg:'',kwh:'',ket:'',harga:0});$('f-harga').value='';saved=null;jn();dyn();preview();return}
+ const c=e.target.closest('.chip');
+ if(c){F.item=nm(F.jenis,+c.dataset.n);F.harga=+c.dataset.p;$('f-harga').value=F.harga;saved=null;dyn();preview()}});
+$('b-save').onclick=()=>{const r=commit();if(r)toast('Struk '+r.id+' tersimpan')};
+$('b-print').onclick=()=>{const r=commit();if(r)doPrint(r)};
+$('b-wa').onclick=()=>{const r=commit();if(r)doWa(r)};
+$('b-new').onclick=()=>{Object.assign(F,{item:'',tujuan:'',token:'',plg:'',kwh:'',ket:'',nama:'',harga:0});saved=null;$('f-harga').value='';$('f-nama').value='';dyn();preview()};
+
+function openS(h){$('sheet').innerHTML=h;$('ov').classList.add('on')}
+function closeS(){$('ov').classList.remove('on')}
+$('ov').addEventListener('click',e=>{if(e.target===$('ov'))closeS()});
+
+function hist(){
+ const today=new Date().toDateString(),td=HIS.filter(r=>new Date(r.t).toDateString()===today),sum=td.reduce((a,r)=>a+r.harga,0);
+ $('v-riw').innerHTML=`<div class="sum">Hari ini: ${td.length} struk<b>${rp(sum)}</b></div><h2>Semua struk</h2>`+(HIS.length?`<div class="list">${HIS.map((r,i)=>`<div class="li" data-i="${i}"><div><b style="white-space:normal">${esc(r.item)}</b><small>${esc(r.id)} · ${esc(fmt(r.t))}${r.nama?' · '+esc(r.nama):''}</small></div><b>${rp(r.harga)}</b></div>`).join('')}</div>`:'<div class="list"><div class="empty">Belum ada struk tersimpan.</div></div>')}
+$('v-riw').addEventListener('click',e=>{const li=e.target.closest('.li');if(!li)return;view(+li.dataset.i)});
+function view(i){const r=HIS[i];if(!r)return;
+ openS(`<div class="pv" style="border:0;background:none;padding:0">${rcHTML(r)}</div><div class="btns"><button class="btn" id="v-p">Cetak</button><button class="btn alt" id="v-w">Kirim WhatsApp</button><button class="btn alt red" id="v-d">Hapus</button><button class="btn alt" id="v-c">Tutup</button></div>`);
+ $('v-p').onclick=()=>doPrint(r);$('v-w').onclick=()=>doWa(r);$('v-c').onclick=closeS;
+ $('v-d').onclick=()=>{if(confirm('Hapus struk '+r.id+'?')){HIS.splice(i,1);sv('zvx_struk',HIS);closeS();hist()}}}
+
+$('seg').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;
+ [...$('seg').children].forEach(x=>x.classList.toggle('on',x===b));
+ $('v-buat').hidden=b.dataset.t!=='buat';$('v-riw').hidden=b.dataset.t!=='riw';if(b.dataset.t==='riw')hist();else preview()});
+
+$('gear').onclick=()=>{
+ openS(`<h3>Pengaturan toko</h3><label for="s-nama">Nama toko</label><input id="s-nama" value="${esc(ST.nama)}"><label for="s-alamat">Alamat</label><textarea id="s-alamat">${esc(ST.alamat)}</textarea><label for="s-hp">Nomor telepon toko (opsional)</label><input id="s-hp" value="${esc(ST.hp)}" inputmode="tel"><label for="s-foot">Pesan di bawah struk</label><textarea id="s-foot">${esc(ST.foot)}</textarea><label for="s-kertas">Lebar kertas cetak</label><select id="s-kertas"><option value="58">58 mm (printer thermal kecil)</option><option value="80">80 mm (printer thermal besar)</option><option value="120">Kertas biasa (struk di tengah)</option></select><label for="s-pw">Ganti sandi admin (kosongkan jika tidak diganti)</label><input id="s-pw" type="password" autocomplete="new-password" placeholder="Sandi baru, minimal 6 karakter"><div class="btns"><button class="btn" id="s-ok">Simpan</button><button class="btn alt" id="s-th">Ganti tema</button></div>`);
+ $('s-kertas').value=ST.kertas;
+ $('s-th').onclick=()=>{const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'};
+ $('s-ok').onclick=async()=>{const np=$('s-pw').value;if(np){if(np.length<6){toast('Sandi minimal 6 karakter');return}await setPw(np)}ST={nama:$('s-nama').value.trim()||DEF.nama,alamat:$('s-alamat').value,hp:$('s-hp').value.trim(),foot:$('s-foot').value,kertas:$('s-kertas').value};sv('zvx_toko',ST);closeS();preview();toast('Pengaturan tersimpan')}};
+
+jn();dyn();preview();
+</script>
+</body>
+</html>
