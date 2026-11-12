@@ -93,22 +93,22 @@ var PRODUK = {
   // f = isian form (urut tampil). Isian TERAKHIR dianggap nomor pelanggan/ID tagihan (disamarkan di riwayat pesanan).
   // Tipe isian: t:'num' = angka saja, o:[...] = pilihan dropdown, selain itu teks bebas.
   lain: [
-    { i: '⚡', n: 'PLN Non Taglis', f: [{ l: 'Nomor registrasi', ph: 'Nomor registrasi PLN', t: 'num' }] },
-    { i: '💧', n: 'Air PDAM', f: [{ l: 'Nama PDAM / wilayah', ph: 'Contoh: PDAM Lamongan' }, { l: 'Nomor pelanggan', ph: 'ID pelanggan PDAM', t: 'num' }] },
-    { i: '☎️', n: 'Telkom', f: [{ l: 'Nomor telepon / pelanggan', ph: 'Contoh: 0322xxxxxx', t: 'num' }] },
-    { i: '🔥', n: 'PGN Gas', f: [{ l: 'ID pelanggan', ph: 'ID pelanggan PGN', t: 'num' }] },
-    { i: '📡', n: 'Internet & TV Kabel', f: [{ l: 'Penyedia', o: ['IndiHome', 'Biznet', 'First Media', 'MNC Play', 'Lainnya (tulis di catatan WA)'] }, { l: 'Nomor pelanggan', ph: 'ID pelanggan', t: 'num' }] },
-    { i: '📱', n: 'Pascabayar', f: [{ l: 'Operator', o: ['Telkomsel Halo', 'Indosat', 'XL', 'Tri', 'Smartfren'] }, { l: 'Nomor ponsel', ph: '08xx xxxx xxxx', t: 'num' }] },
-    { i: '🏢', n: 'IPL', f: [{ l: 'Nama perumahan / apartemen', ph: 'Nama lokasi' }, { l: 'Nomor unit / ID pelanggan', ph: 'Contoh: A-12' }] },
-    { i: '🛡️', n: 'Bayar Asuransi', f: [{ l: 'Nama asuransi', ph: 'Nama perusahaan asuransi' }, { l: 'Nomor polis', ph: 'Nomor polis' }] },
-    { i: '📅', n: 'Bayar Cicilan', f: [{ l: 'Perusahaan pembiayaan', ph: 'Contoh: FIF, Adira' }, { l: 'Nomor kontrak', ph: 'Nomor kontrak / perjanjian' }] },
-    { i: '🎓', n: 'Biaya Pendidikan', f: [{ l: 'Nama sekolah / kampus', ph: 'Nama institusi' }, { l: 'Nomor induk / ID pembayaran', ph: 'NIS / NIM / ID bayar' }] }
+    { i: '⚡', ic: 'plnnon', n: 'PLN Non Taglis', f: [{ l: 'Nomor registrasi', ph: 'Nomor registrasi PLN', t: 'num' }] },
+    { i: '💧', ic: 'pdam', n: 'Air PDAM', f: [{ l: 'Nama PDAM / wilayah', ph: 'Contoh: PDAM Lamongan' }, { l: 'Nomor pelanggan', ph: 'ID pelanggan PDAM', t: 'num' }] },
+    { i: '☎️', ic: 'telkom', n: 'Telkom', f: [{ l: 'Nomor telepon / pelanggan', ph: 'Contoh: 0322xxxxxx', t: 'num' }] },
+    { i: '🔥', ic: 'pgn', n: 'PGN Gas', f: [{ l: 'ID pelanggan', ph: 'ID pelanggan PGN', t: 'num' }] },
+    { i: '📡', ic: 'internet', n: 'Internet & TV Kabel', f: [{ l: 'Penyedia', o: ['IndiHome', 'Biznet', 'First Media', 'MNC Play', 'Lainnya (tulis di catatan WA)'] }, { l: 'Nomor pelanggan', ph: 'ID pelanggan', t: 'num' }] },
+    { i: '📱', ic: 'pasca', n: 'Pascabayar', f: [{ l: 'Operator', o: ['Telkomsel Halo', 'Indosat', 'XL', 'Tri', 'Smartfren'] }, { l: 'Nomor ponsel', ph: '08xx xxxx xxxx', t: 'num' }] },
+    { i: '🏢', ic: 'ipl', n: 'IPL', f: [{ l: 'Nama perumahan / apartemen', ph: 'Nama lokasi' }, { l: 'Nomor unit / ID pelanggan', ph: 'Contoh: A-12' }] },
+    { i: '🛡️', ic: 'asuransi', n: 'Bayar Asuransi', f: [{ l: 'Nama asuransi', ph: 'Nama perusahaan asuransi' }, { l: 'Nomor polis', ph: 'Nomor polis' }] },
+    { i: '📅', ic: 'cicilan', n: 'Bayar Cicilan', f: [{ l: 'Perusahaan pembiayaan', ph: 'Contoh: FIF, Adira' }, { l: 'Nomor kontrak', ph: 'Nomor kontrak / perjanjian' }] },
+    { i: '🎓', ic: 'pendidikan', n: 'Biaya Pendidikan', f: [{ l: 'Nama sekolah / kampus', ph: 'Nama institusi' }, { l: 'Nomor induk / ID pembayaran', ph: 'NIS / NIM / ID bayar' }] }
   ],
   jasa: [
     // Jasa bisa punya: p = harga tetap (0 = harga sesuai kebutuhan, admin kirim penawaran lewat WhatsApp),
     // opsi = pilihan paket [nama, harga], f = isian form (r:true = wajib),
     // contoh = daftar karya yang sudah jadi [{ n: nama, d: keterangan, u: link https }]. Harga opsi di bawah hanya CONTOH.
-    { i: '📱', n: 'Jasa bikin aplikasi', d: 'Web app, miniapp Telegram, dan lainnya', p: 0,
+    { i: '📱', ic: 'aplikasi', n: 'Jasa bikin aplikasi', d: 'Web app, miniapp Telegram, dan lainnya', p: 0,
       f: [{ l: 'Jenis aplikasi', ph: 'Contoh: aplikasi kasir, toko online, game', r: true }, { l: 'Fitur yang dibutuhkan', ph: 'Contoh: login, laporan, cetak struk' }],
       contoh: [
         { n: 'Monster Hunt', d: 'Game berburu monster. Tersedia web app dan miniapp Telegram.', u: 'https://pixel-hunt-pi.vercel.app/' },
@@ -118,7 +118,7 @@ var PRODUK = {
         { n: 'Rupa Mine', d: 'Game idle mining, miniapp Telegram.', u: 'https://rupa-mine.vercel.app/' },
         { n: 'Core Mining', d: 'Game mining bertema CPU dan GPU, miniapp Telegram.', u: 'https://core-mining-app.vercel.app/' }
       ] },
-    { i: '🎮', n: 'Jasa rawat / joki akun game', d: 'Rawat akun: login harian, misi, event',
+    { i: '🎮', ic: 'joki', n: 'Jasa rawat / joki akun game', d: 'Rawat akun: login harian, misi, event',
       opsi: [['Mingguan', 50000], ['Bulanan', 150000]],
       f: [{ l: 'Nama game', ph: 'Contoh: Mobile Legends', r: true }, { l: 'Nickname / ID akun', ph: 'Nickname atau ID (bukan password)', r: true }, { l: 'Catatan', ph: 'Target atau permintaan khusus' }] }
   ],

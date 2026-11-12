@@ -100,7 +100,7 @@ body{padding-bottom:104px}
 .grid button{font-weight:600;font-size:12.5px;gap:8px}
 .grid button:nth-child(8n+1){--h:#6a43ff}.grid button:nth-child(8n+2){--h:#f59e0b}.grid button:nth-child(8n+3){--h:#0ea5a4}.grid button:nth-child(8n+4){--h:#ec4899}
 .grid button:nth-child(8n+5){--h:#22a35a}.grid button:nth-child(8n+6){--h:#ef4444}.grid button:nth-child(8n+7){--h:#0ea5e9}.grid button:nth-child(8n){--h:#64748b}
-.grid i{width:52px;height:52px;border-radius:18px;background:color-mix(in srgb,var(--h,var(--pri)) 15%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--h,var(--pri)) 22%,transparent)}
+.grid i{color:var(--h,var(--pri));width:52px;height:52px;border-radius:18px;background:color-mix(in srgb,var(--h,var(--pri)) 15%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--h,var(--pri)) 22%,transparent)}
 .grid button i.lg{background:#fff;padding:7px;box-shadow:0 2px 8px rgba(23,16,54,.14)}
 h2{font-size:18px;font-weight:800;letter-spacing:-.01em;margin:26px 20px 12px}
 .promo{border-radius:24px;background:linear-gradient(120deg,#ffd45e,#ff9d2e);color:#2a1700;margin:16px 14px 0;box-shadow:0 10px 24px rgba(255,157,46,.28)}
@@ -109,7 +109,7 @@ h2{font-size:18px;font-weight:800;letter-spacing:-.01em;margin:26px 20px 12px}
 .list{border-radius:24px;box-shadow:0 1px 0 var(--line),0 8px 22px rgba(23,16,54,.06)}
 .row{padding:15px 18px}.row b{font-weight:700}
 .amt{color:var(--pri)}
-.svc i{background:color-mix(in srgb,var(--pri) 13%,var(--card));border-radius:14px}
+.svc i{color:var(--pri);background:color-mix(in srgb,var(--pri) 13%,var(--card));border-radius:14px}
 .btn2{border-radius:12px;padding:9px 15px;background:linear-gradient(135deg,var(--pri),var(--pri2))}
 .op{background:var(--gold);color:#2a1700;font-weight:700;padding:3px 10px;border-radius:10px}
 nav{bottom:10px;width:calc(100% - 24px);max-width:456px;border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 28px rgba(23,16,54,.2);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);padding:9px 0}
@@ -133,6 +133,7 @@ input:focus,select:focus{outline:0;border-color:var(--pri);box-shadow:0 0 0 4px 
 .tabs button{border-radius:13px;font-weight:600}
 .tabs .on{background:color-mix(in srgb,var(--pri) 12%,var(--card))}
 .empty{padding:34px 16px}
+.o{fill:none}
 </style>
 </head>
 <body>
@@ -146,6 +147,8 @@ var S={ord:[],cur:null,tab:'home',phone:''};
 try{var s=JSON.parse(localStorage.getItem('zvx_pesanan')||'null');if(Array.isArray(s))S.ord=s}catch(e){}
 function save(){try{localStorage.setItem('zvx_pesanan',JSON.stringify(S.ord))}catch(e){}}
 var $=function(i){return document.getElementById(i)};
+var IC={};(function(m){for(var k in m)IC[k]='<svg viewBox="0 0 32 32" width="28" height="28" fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+m[k]+'</svg>'})({'pulsa': '<rect x="9" y="4" width="14" height="24" rx="3"/><path class="o" d="M14 24h4"/><text x="16" y="18" font-size="8.5" font-weight="800" text-anchor="middle" fill="currentColor" fill-opacity="1" stroke="none">Rp</text>', 'listrik': '<path d="M18 3L7 18h8l-1 11 11-15h-8z"/>', 'jasa': '<rect x="5" y="7" width="22" height="15" rx="2"/><path class="o" d="M3 26h26M13 12l-3 3 3 3M19 12l3 3-3 3"/>', 'chat': '<path d="M6 7h20a2 2 0 012 2v11a2 2 0 01-2 2H15l-6 5v-5H6a2 2 0 01-2-2V9a2 2 0 012-2z"/><path class="o" d="M10 13h12M10 17h7"/>', 'game': '<rect x="3" y="9" width="26" height="15" rx="7.5"/><path class="o" d="M10 13v7M6.5 16.5h7"/><circle cx="21" cy="15" r="1.3"/><circle cx="24.5" cy="18.5" r="1.3"/>', 'bpjs': '<path d="M16 3l11 4v8c0 7-5 12-11 14C10 27 5 22 5 15V7z"/><path class="o" d="M16 11v8M12 15h8"/>', 'samsat': '<rect x="4" y="19" width="24" height="7" rx="2"/><path class="o" d="M5 19l2.5-6.5a3 3 0 012.8-2h11.4a3 3 0 012.8 2L27 19"/><circle cx="9.5" cy="22.5" r="1.2"/><circle cx="22.5" cy="22.5" r="1.2"/>', 'lainnya': '<rect x="5" y="5" width="9" height="9" rx="2.5"/><rect x="18" y="5" width="9" height="9" rx="2.5"/><rect x="5" y="18" width="9" height="9" rx="2.5"/><rect x="18" y="18" width="9" height="9" rx="2.5"/>', 'plnnon': '<path class="o" d="M12 4v6M20 4v6M16 22v6"/><path d="M8 10h16v4a8 8 0 01-16 0z"/>', 'pdam': '<path d="M16 4s9 9 9 15a9 9 0 01-18 0c0-6 9-15 9-15z"/><path class="o" d="M12 20a4 4 0 004 4"/>', 'telkom': '<path d="M8 5l4 1 2 6-3 2a14 14 0 007 7l2-3 6 2 1 4a3 3 0 01-3 3C13 27 5 19 5 8a3 3 0 013-3z"/>', 'pgn': '<path d="M16 3c1 6 8 8 8 16a8 8 0 01-16 0c0-3 2-5 3-7 1 2 2 3 3 3 0-4-1-7 2-12z"/>', 'internet': '<path class="o" d="M4 12a17 17 0 0124 0M8 17a11 11 0 0116 0M12 22a5 5 0 018 0"/><circle cx="16" cy="26" r="1.6"/>', 'pasca': '<rect x="9" y="4" width="14" height="24" rx="3"/><path class="o" d="M13 14h6l-2-2M19 19h-6l2 2"/>', 'ipl': '<rect x="8" y="4" width="16" height="24" rx="2"/><path class="o" d="M12 9h2M18 9h2M12 14h2M18 14h2M12 19h2M18 19h2M14 28v-4h4v4"/>', 'asuransi': '<path d="M4 16a12 12 0 0124 0z"/><path class="o" d="M16 16v8a3 3 0 01-6 0"/>', 'cicilan': '<rect x="4" y="7" width="24" height="21" rx="3"/><path class="o" d="M4 13h24M10 4v5M22 4v5M16 18v6M13 21h6"/>', 'pendidikan': '<path d="M3 12l13-6 13 6-13 6z"/><path class="o" d="M8 15v6c0 2 4 4 8 4s8-2 8-4v-6"/>', 'aplikasi': '<rect x="8" y="3" width="16" height="26" rx="3"/><path class="o" d="M14 13l-2 3 2 3M18 13l2 3-2 3"/>', 'joki': '<path d="M5 25l-1-14 7 5 5-9 5 9 7-5-1 14z"/>'});
+function ico(x){return IC[x.ic]||x.i}
 var rp=function(n){return 'Rp'+Math.round(n).toLocaleString('id-ID')};
 function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2200)}
 function open_(h){$('sheet').innerHTML=h;$('ov').classList.add('on')}
@@ -165,15 +168,15 @@ function opr(n){var p=n.slice(0,4);
 function home(){
  var h='<div class="hero"><div class="hd"><div class="brand"><img src="icon-192.png" alt="Logo ZVX STORE"><div><b>ZVX STORE</b><small>Pulsa · Token · Jasa Online</small></div></div><button class="chat" onclick="wa()">💬 Chat</button></div><h1>Mau beli apa hari ini?</h1></div>'
  +'<div class="box up"><div class="grid">'
- +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
- +mi('🎮','Voucher Game','voucher()')+mi('🏥','BPJS',"bpjs()")+mi('🚗','E-Samsat',"samsat()")+mi('⋯','Lainnya','lain()')
+ +mi('pulsa','Pulsa & Data','pulsa()')+mi('listrik','Listrik','listrik()')+mi('jasa','Jasa Online','jasa()')+mi('chat','Chat Admin','wa()')
+ +mi('game','Voucher Game','voucher()')+mi('bpjs','BPJS',"bpjs()")+mi('samsat','E-Samsat',"samsat()")+mi('lainnya','Lainnya','lain()')
  +'</div></div>'
  +'<div class="promo"><b>Pulsa mulai '+rp(PULSA[0]+MU)+'</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
  +'<h2>Pesanan terakhir</h2>'+ordList(S.ord.slice(0,3));
  return h}
-function mi(i,n,f){return '<button onclick="'+f+'"><i>'+i+'</i>'+n+'</button>'}
-function svc(j,k){return '<div class="row"><div class="svc"><i>'+j.i+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+jPrice(j)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
+function mi(i,n,f){return '<button onclick="'+f+'"><i>'+(IC[i]||i)+'</i>'+n+'</button>'}
+function svc(j,k){return '<div class="row"><div class="svc"><i>'+ico(j)+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+jPrice(j)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
 var TOKO=PRODUK.toko,PAY=PRODUK.pay;
 function payOf(k){for(var i=0;i<PAY.length;i++)if(PAY[i].k===k)return PAY[i];return PAY[1]}
 function waNo(){var n=String(TOKO.wa||'').replace(/\D/g,'');if(n.indexOf('0')===0)n='62'+n.slice(1);return n}
@@ -220,9 +223,9 @@ function bjChk(){var n=$('bj1'),d=n.value.replace(/\D/g,'');if(n.value!==d)n.val
 function bjGo(){var j=$('bj').value,va=$('bj1').value.replace(/\D/g,''),b=$('bj2').value;
  bayar((/^BPJS/.test(j)?j:'BPJS '+j)+' (cek tagihan)','VA ••••'+va.slice(-4)+' · '+b+' bulan',0,'Jenis: '+(/^BPJS/.test(j)?j:'BPJS '+j)+'\nNomor VA: '+va+'\nIuran: '+b+' bulan')}
 var LN=PRODUK.lain||[],lnK=0;
-function lain(){open_('<h3>Layanan lainnya</h3><div class="grid">'+LN.map(function(x,k){return '<button onclick="lnForm('+k+')"><i>'+x.i+'</i>'+esc(x.n)+'</button>'}).join('')+'</div>')}
+function lain(){open_('<h3>Layanan lainnya</h3><div class="grid">'+LN.map(function(x,k){return '<button onclick="lnForm('+k+')"><i>'+ico(x)+'</i>'+esc(x.n)+'</button>'}).join('')+'</div>')}
 function lnForm(k){lnK=k;var x=LN[k];
- open_('<h3>'+x.i+' '+esc(x.n)+'</h3>'+x.f.map(function(f,i){var id='ln'+i,h='<label for="'+id+'">'+esc(f.l)+'</label>';
+ open_('<h3 style="display:flex;align-items:center;gap:10px"><span style="color:var(--pri);display:grid">'+ico(x)+'</span>'+esc(x.n)+'</h3>'+x.f.map(function(f,i){var id='ln'+i,h='<label for="'+id+'">'+esc(f.l)+'</label>';
   if(f.o)return h+'<select id="'+id+'">'+f.o.map(function(o){return '<option>'+esc(o)+'</option>'}).join('')+'</select>';
   return h+'<input id="'+id+'" '+(f.t==='num'?'inputmode="numeric" ':'')+'placeholder="'+esc(f.ph||'')+'" autocomplete="off" oninput="lnChk()">'}).join('')
  +'<p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(x.adm||ADM.lain)+'. Admin akan mengecek tagihan dan membalas lewat WhatsApp. Nomor pelanggan hanya dikirim ke WhatsApp admin dan tidak disimpan utuh di perangkat ini.</p>'
@@ -302,7 +305,7 @@ var jsK=0,jsOp=null;
 function jPrice(j){return j.opsi?'mulai '+rp(Math.min.apply(null,j.opsi.map(function(o){return o[1]}))):(j.p?rp(j.p):'harga sesuai kebutuhan')}
 function jFields(j){return j.f||[{l:'Catatan untuk penyedia jasa',ph:j.ph||'Contoh: nama brand, warna, referensi'}]}
 function pesan(k){jsK=k;jsOp=null;var j=JASA[k];
- open_('<h3>'+j.i+' '+esc(j.n)+'</h3><p style="color:var(--mut)">'+esc(j.d)+'</p>'
+ open_('<h3 style="display:flex;align-items:center;gap:10px"><span style="color:var(--pri);display:grid">'+ico(j)+'</span>'+esc(j.n)+'</h3>'+'<p style="color:var(--mut)">'+esc(j.d)+'</p>'
  +(j.contoh?'<label>Contoh aplikasi yang sudah jadi</label><div class="list" style="margin:0 0 4px">'+j.contoh.filter(function(c){return /^https:\/\//.test(c.u)}).map(function(c){return '<div class="row"><div><b>'+esc(c.n)+'</b><small>'+esc(c.d)+'</small></div><a class="btn2" href="'+esc(c.u)+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Lihat</a></div>'}).join('')+'</div>':'')
  +(j.opsi?'<label>Pilih paket</label><div class="chips" style="grid-template-columns:repeat(2,1fr)">'+j.opsi.map(function(o,i){return '<div class="chip jso" onclick="jsPick('+i+')">'+esc(o[0])+'<small>'+rp(o[1])+'</small></div>'}).join('')+'</div>':'')
  +jFields(j).map(function(x,i){return '<label for="jf'+i+'">'+esc(x.l)+(x.r?'':' (opsional)')+'</label><input id="jf'+i+'" placeholder="'+esc(x.ph||'')+'" autocomplete="off" oninput="jsChk()">'}).join('')
