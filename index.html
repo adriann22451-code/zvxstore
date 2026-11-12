@@ -131,26 +131,42 @@ function home(){
  return h}
 function mi(i,n,f){return '<button onclick="'+f+'"><i>'+i+'</i>'+n+'</button>'}
 function svc(j,k){return '<div class="row"><div class="svc"><i>'+j.i+'</i><div><b>'+j.n+'</b><small>'+j.d+' · '+rp(j.p)+'</small></div></div><button class="btn2" onclick="pesan('+k+')">Pesan</button></div>'}
-var TOKO={nama:'ZVX STORE',wa:'',dana:'',an:'ZVX STORE'};
-function wa(msg){window.open('https://wa.me/'+TOKO.wa+(msg?'?text='+encodeURIComponent(msg):''),'_blank')}
+var TOKO={nama:'ZVX STORE',wa:'082245735717'};
+// Isi nomor rekening/e-wallet di bawah ini. Kosongkan jika belum ada (admin akan kirim lewat WhatsApp).
+var PAY=[
+ {k:'Transfer bank',no:'',bank:'',an:'ZVX STORE'},
+ {k:'DANA',no:'',an:'ZVX STORE'},
+ {k:'GoPay',no:'',an:'ZVX STORE'},
+ {k:'ShopeePay',no:'',an:'ZVX STORE'},
+ {k:'QRIS',qris:'qris.png'}];
+function payOf(k){for(var i=0;i<PAY.length;i++)if(PAY[i].k===k)return PAY[i];return PAY[1]}
+function waNo(){var n=String(TOKO.wa||'').replace(/\D/g,'');if(n.indexOf('0')===0)n='62'+n.slice(1);return n}
+function wa(msg){window.open('https://wa.me/'+waNo()+(msg?'?text='+encodeURIComponent(msg):''),'_blank')}
 function ordList(a){if(!a.length)return '<div class="list"><div class="empty">Belum ada pesanan. Pilih layanan di atas untuk mulai belanja.</div></div>';
  return '<div class="list">'+a.map(function(o,k){return '<div class="row" style="cursor:pointer" onclick="ordView('+k+')"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+' · '+esc(o.d)+'</small></div><div class="amt">'+rp(o.a)+'</div></div>'}).join('')+'</div>'}
 function actv(){return '<h2>Pesanan</h2>'+ordList(S.ord)}
-function info(){return '<h2>Info toko</h2><div class="list"><div class="row"><div><b>ZVX STORE</b><small>Jl. Raya Bapuhbandung No. 5, Glagah, Lamongan</small></div></div><div class="row"><div><b>Cara pesan</b><small>Pilih produk, isi nomor tujuan, bayar lewat DANA, lalu kirim bukti bayar ke WhatsApp admin</small></div></div><div class="row"><div>Hubungi admin</div><button class="btn2" onclick="wa()">Chat</button></div><div class="row"><div>Mode tampilan</div><button class="btn2" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme===\'dark\'?\'light\':\'dark\'">Ganti</button></div><div class="row"><div><b>Menu admin</b><small>Khusus admin (perlu sandi)</small></div><a class="btn2" href="admin.html" style="text-decoration:none">Buka 🔒</a></div></div>'}
+function info(){return '<h2>Info toko</h2><div class="list"><div class="row"><div><b>ZVX STORE</b><small>Jl. Raya Bapuhbandung No. 5, Glagah, Lamongan</small></div></div><div class="row"><div><b>Cara pesan</b><small>Pilih produk, isi nomor tujuan, bayar lewat transfer bank, DANA, GoPay, ShopeePay, atau QRIS, lalu kirim bukti bayar ke WhatsApp admin</small></div></div><div class="row"><div>Hubungi admin</div><button class="btn2" onclick="wa()">Chat</button></div><div class="row"><div>Mode tampilan</div><button class="btn2" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme===\'dark\'?\'light\':\'dark\'">Ganti</button></div><div class="row"><div><b>Menu admin</b><small>Khusus admin (perlu sandi)</small></div><a class="btn2" href="admin.html" style="text-decoration:none">Buka 🔒</a></div></div>'}
 function draw(){
  $('app').innerHTML={home:home,act:actv,me:info}[S.tab]();
  var n=[['home','🏠','Beranda'],['act','🧾','Pesanan'],['me','🏪','Info toko']];
  $('nav').innerHTML=n.map(function(x){return '<button class="'+(S.tab===x[0]?'on':'')+'" onclick="S.tab=\''+x[0]+'\';draw();scrollTo(0,0)"><i>'+x[1]+'</i>'+x[2]+'</button>'}).join('')}
 
-function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+'\nTotal: '+rp(o.a)+'\nPembayaran: DANA\n\nSaya kirim bukti pembayaran di chat ini.'}
+function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+'\nTotal: '+rp(o.a)+'\nPembayaran: '+(o.m||'DANA')+'\n\nSaya kirim bukti pembayaran di chat ini.'}
 function bayar(title,sub,amt){
- ordShow({id:'ZVX-'+Date.now().toString().slice(-8),t:title,s:sub,a:amt,d:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})})}
+ ordShow({id:'ZVX-'+Date.now().toString().slice(-8),t:title,s:sub,a:amt,m:'DANA',d:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})})}
 function ordView(k){if(S.ord[k])ordShow(S.ord[k])}
-function ordShow(o){S.cur=o;
- open_('<h3>Konfirmasi pesanan</h3><div class="list" style="margin:0 0 12px"><div class="row"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+'</small></div><div class="amt">'+rp(o.a)+'</div></div></div>'
- +'<p style="color:var(--mut);font-size:14px;line-height:1.6">1. Bayar <b style="color:var(--tx)">'+rp(o.a)+'</b> lewat DANA'+(TOKO.dana?' ke <b style="color:var(--tx)">'+esc(TOKO.dana)+'</b> a.n. '+esc(TOKO.an):'')+'.<br>2. Kirim bukti bayar ke WhatsApp admin.<br>3. Pesanan diproses setelah pembayaran dicek.</p>'
+function payPick(k){if(!S.cur)return;S.cur.m=k;if(S.ord.some(function(x){return x.id===S.cur.id}))save();ordShow(S.cur)}
+function payCopy(){var p=payOf(S.cur.m);try{navigator.clipboard.writeText(p.no);toast('Nomor disalin')}catch(e){toast('Salin manual: '+p.no)}}
+function payBox(o){var p=payOf(o.m),t='<b style="color:var(--tx)">'+rp(o.a)+'</b>';
+ if(p.k==='QRIS')return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Scan QRIS di bawah, lalu bayar tepat '+t+'.</p><div style="text-align:center;margin:10px 0"><img src="'+p.qris+'" alt="QRIS ZVX STORE" style="width:100%;max-width:260px;border-radius:12px;background:#fff" onerror="this.style.display=\'none\';document.getElementById(\'qn\').style.display=\'block\'"><p id="qn" style="display:none;color:var(--mut);font-size:14px">Kode QRIS akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p></div>';
+ if(p.no)return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Transfer '+t+' ke <b style="color:var(--tx)">'+esc(p.k+(p.bank?' '+p.bank:''))+' '+esc(p.no)+'</b> a.n. '+esc(p.an)+'.</p><button class="cta" style="background:var(--bg);color:var(--tx);margin:0 0 4px" onclick="payCopy()">Salin nomor</button>';
+ return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Total bayar '+t+'. Nomor '+esc(p.k)+' akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p>'}
+function ordShow(o){S.cur=o;if(!o.m)o.m='DANA';
+ open_('<h3>Konfirmasi pesanan</h3><div class="list" style="margin:0 0 4px"><div class="row"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+'</small></div><div class="amt">'+rp(o.a)+'</div></div></div>'
+ +'<label>Pilih metode pembayaran</label><div class="chips">'+PAY.map(function(p){return '<div class="chip'+(o.m===p.k?' on':'')+'" onclick="payPick(\''+p.k+'\')">'+p.k+'</div>'}).join('')+'</div>'
+ +payBox(o)
+ +'<p style="color:var(--mut);font-size:13px;line-height:1.6;margin-top:10px">Setelah bayar, kirim pesanan dan bukti bayar ke WhatsApp admin. Pesanan diproses setelah pembayaran dicek.</p>'
  +'<button class="cta" onclick="ordWa()">Kirim pesanan via WhatsApp</button>'
- +(TOKO.dana?'<button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="try{navigator.clipboard.writeText(TOKO.dana);toast(\'Nomor DANA disalin\')}catch(e){}">Salin nomor DANA</button>':'')
  +'<button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="close_()">Tutup</button>')}
 function ordWa(){var o=S.cur;if(!o)return;if(!S.ord.some(function(x){return x.id===o.id})){S.ord.unshift(o);save();draw()}wa(orderText(o))}
 
