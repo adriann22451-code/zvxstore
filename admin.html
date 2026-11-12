@@ -135,7 +135,7 @@ function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';cle
 
 const DEF={nama:'ZVX STORE',alamat:'Jl. Raya Bapuhbandung No. 5\nGlagah, Lamongan',hp:'',foot:'Terima kasih sudah berbelanja.\nSimpan struk ini sebagai bukti pembayaran.',kertas:'58'};
 let ST=Object.assign({},DEF,ld('zvx_toko',{})),HIS=ld('zvx_struk',[]),CNT=ld('zvx_cnt',0);
-const JENIS={pulsa:'Pulsa',data:'Paket data',listrik:'Token listrik',jasa:'Jasa online',lain:'Lainnya'};
+const JENIS={pulsa:'Pulsa',data:'Paket data',listrik:'Token listrik',jasa:'Jasa online',bpjs:'BPJS Kesehatan',samsat:'E-Samsat',lain:'Lainnya'};
 const NOM={pulsa:[[5000,8000],[10000,13000],[20000,23000],[25000,28000],[50000,53000],[100000,103000]],listrik:[[20000,23000],[50000,53000],[100000,103000],[200000,203000],[500000,510000]]};
 const nm=(j,n)=>(j==='pulsa'?'Pulsa ':'Token listrik ')+n.toLocaleString('id-ID');
 let F={jenis:'listrik',tujuan:'',item:'',harga:0,nama:'',metode:'DANA',token:'',plg:'',kwh:'',ket:''},saved=null;
@@ -147,6 +147,8 @@ function dyn(){
  if(j==='pulsa')h+=fld('tujuan','Nomor HP','08xx xxxx xxxx','numeric')+fld('item','Produk','Pulsa 10.000');
  if(j==='data')h+=fld('tujuan','Nomor HP','08xx xxxx xxxx','numeric')+fld('item','Nama paket','Data 8 GB 30 hari');
  if(j==='listrik')h+=fld('tujuan','ID pelanggan / nomor meter','12 digit','numeric')+fld('plg','Nama pelanggan (opsional)','')+fld('token','Nomor token (20 digit)','1234 5678 9012 3456 7890','numeric')+fld('kwh','Jumlah kWh (opsional)','Contoh: 36,5','decimal')+fld('item','Produk','Token listrik 50.000');
+ if(j==='bpjs')h+=fld('tujuan','Nomor VA BPJS','16 digit','numeric')+fld('plg','Nama peserta (opsional)','')+fld('item','Produk','BPJS Kesehatan 1 bulan')+fld('ket','Catatan (opsional)','');
+ if(j==='samsat')h+=fld('tujuan','Nomor polisi','S 1234 AB')+fld('plg','Nama pemilik (opsional)','')+fld('item','Produk','Pajak kendaraan (E-Samsat)')+fld('ket','Catatan (opsional)','');
  if(j==='jasa')h+=fld('item','Nama jasa','Desain logo')+fld('ket','Catatan (opsional)','');
  if(j==='lain')h+=fld('item','Nama produk','')+fld('tujuan','Tujuan (opsional)','');
  $('dyn').innerHTML=h}
@@ -158,10 +160,10 @@ function cur(){return saved||Object.assign({},F,{id:nextId(),t:Date.now()})}
 
 function rcHTML(r){
  const row=(a,b)=>b?`<div class="rr"><span>${a}</span><b>${esc(b)}</b></div>`:'';
- const tl={pulsa:'Nomor HP',data:'Nomor HP',listrik:'ID pelanggan',lain:'Tujuan'}[r.jenis];
+ const tl={pulsa:'Nomor HP',data:'Nomor HP',listrik:'ID pelanggan',bpjs:'Nomor VA',samsat:'Nomor polisi',lain:'Tujuan'}[r.jenis];
  return `<div class="receipt"><div class="rh"><b>${esc(ST.nama)}</b><div class="sm">${br(ST.alamat)}${ST.hp?'<br>Telp '+esc(ST.hp):''}</div></div><div class="rl"></div><div class="rc">STRUK PEMBAYARAN</div>`
  +row('No. transaksi',r.id)+row('Waktu',fmt(r.t))+row('Pembeli',r.nama)+row('Layanan',JENIS[r.jenis])+row('Produk',r.item)
- +(tl?row(tl,r.tujuan):'')+(r.jenis==='listrik'?row('Nama',r.plg):'')+row('Catatan',r.ket)
+ +(tl?row(tl,r.tujuan):'')+(r.jenis==='listrik'||r.jenis==='bpjs'||r.jenis==='samsat'?row('Nama',r.plg):'')+row('Catatan',r.ket)
  +(r.jenis==='listrik'&&r.token?`<div class="tok"><span>NOMOR TOKEN</span><b>${esc(fmtTok(r.token))}</b></div>`+row('Jumlah kWh',r.kwh):'')
  +`<div class="rl"></div><div class="rr big"><span>TOTAL</span><b>${rp(r.harga)}</b></div>`+row('Metode',r.metode)+row('Status','Berhasil')
  +`<div class="rl"></div><div class="rf">${br(ST.foot)}</div></div>`}
@@ -169,8 +171,8 @@ function waText(r){
  const L=['*'+ST.nama+'*',ST.alamat,'','*STRUK PEMBAYARAN*','No: '+r.id,'Waktu: '+fmt(r.t)];
  if(r.nama)L.push('Pembeli: '+r.nama);
  L.push('Layanan: '+JENIS[r.jenis],'Produk: '+r.item);
- if(r.tujuan)L.push((r.jenis==='listrik'?'ID pelanggan: ':r.jenis==='lain'?'Tujuan: ':'Nomor HP: ')+r.tujuan);
- if(r.jenis==='listrik'&&r.plg)L.push('Nama: '+r.plg);
+ if(r.tujuan)L.push(({listrik:'ID pelanggan: ',lain:'Tujuan: ',bpjs:'Nomor VA: ',samsat:'Nomor polisi: '}[r.jenis]||'Nomor HP: ')+r.tujuan);
+ if((r.jenis==='listrik'||r.jenis==='bpjs'||r.jenis==='samsat')&&r.plg)L.push('Nama: '+r.plg);
  if(r.ket)L.push('Catatan: '+r.ket);
  if(r.jenis==='listrik'&&r.token){L.push('','*NOMOR TOKEN*','*'+fmtTok(r.token)+'*');if(r.kwh)L.push('kWh: '+r.kwh)}
  L.push('','*TOTAL: '+rp(r.harga)+'*','Metode: '+r.metode,'Status: Berhasil','',ST.foot);

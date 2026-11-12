@@ -123,7 +123,7 @@ function home(){
  var h='<div class="hero"><div class="hd"><div class="brand"><img src="icon-192.png" alt="Logo ZVX STORE"><div><b>ZVX STORE</b><small>Pulsa · Token · Jasa Online</small></div></div><button class="chat" onclick="wa()">💬 Chat</button></div><h1>Mau beli apa hari ini?</h1></div>'
  +'<div class="box up"><div class="grid">'
  +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
- +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('💳','Tagihan',"toast('Tagihan segera hadir')")+mi('✈️','Travel',"toast('Travel segera hadir')")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
+ +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"tagihan('bpjs')")+mi('🚗','E-Samsat',"tagihan('samsat')")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
  +'</div></div>'
  +'<div class="promo"><b>Pulsa mulai Rp8.000</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
@@ -142,8 +142,9 @@ var PAY=[
 function payOf(k){for(var i=0;i<PAY.length;i++)if(PAY[i].k===k)return PAY[i];return PAY[1]}
 function waNo(){var n=String(TOKO.wa||'').replace(/\D/g,'');if(n.indexOf('0')===0)n='62'+n.slice(1);return n}
 function wa(msg){window.open('https://wa.me/'+waNo()+(msg?'?text='+encodeURIComponent(msg):''),'_blank')}
+function ta(o){return o.a?rp(o.a):'Dicek admin'}
 function ordList(a){if(!a.length)return '<div class="list"><div class="empty">Belum ada pesanan. Pilih layanan di atas untuk mulai belanja.</div></div>';
- return '<div class="list">'+a.map(function(o,k){return '<div class="row" style="cursor:pointer" onclick="ordView('+k+')"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+' · '+esc(o.d)+'</small></div><div class="amt">'+rp(o.a)+'</div></div>'}).join('')+'</div>'}
+ return '<div class="list">'+a.map(function(o,k){return '<div class="row" style="cursor:pointer" onclick="ordView('+k+')"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+' · '+esc(o.d)+'</small></div><div class="amt">'+ta(o)+'</div></div>'}).join('')+'</div>'}
 function actv(){return '<h2>Pesanan</h2>'+ordList(S.ord)}
 function info(){return '<h2>Info toko</h2><div class="list"><div class="row"><div><b>ZVX STORE</b><small>Jl. Raya Bapuhbandung No. 5, Glagah, Lamongan</small></div></div><div class="row"><div><b>Cara pesan</b><small>Pilih produk, isi nomor tujuan, bayar lewat transfer bank, DANA, GoPay, ShopeePay, atau QRIS, lalu kirim bukti bayar ke WhatsApp admin</small></div></div><div class="row"><div>Hubungi admin</div><button class="btn2" onclick="wa()">Chat</button></div><div class="row"><div>Mode tampilan</div><button class="btn2" onclick="var r=document.documentElement;r.dataset.theme=r.dataset.theme===\'dark\'?\'light\':\'dark\'">Ganti</button></div><div class="row"><div><b>Menu admin</b><small>Khusus admin (perlu sandi)</small></div><a class="btn2" href="admin.html" style="text-decoration:none">Buka 🔒</a></div></div>'}
 function draw(){
@@ -151,24 +152,34 @@ function draw(){
  var n=[['home','🏠','Beranda'],['act','🧾','Pesanan'],['me','🏪','Info toko']];
  $('nav').innerHTML=n.map(function(x){return '<button class="'+(S.tab===x[0]?'on':'')+'" onclick="S.tab=\''+x[0]+'\';draw();scrollTo(0,0)"><i>'+x[1]+'</i>'+x[2]+'</button>'}).join('')}
 
-function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+'\nTotal: '+rp(o.a)+'\nPembayaran: '+(o.m||'DANA')+'\n\nSaya kirim bukti pembayaran di chat ini.'}
+function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+'\nTotal: '+(o.a?rp(o.a):'(mohon dicek admin)')+'\nPembayaran: '+(o.m||'DANA')+'\n\nSaya kirim bukti pembayaran di chat ini.'}
 function bayar(title,sub,amt){
  ordShow({id:'ZVX-'+Date.now().toString().slice(-8),t:title,s:sub,a:amt,m:'DANA',d:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})})}
 function ordView(k){if(S.ord[k])ordShow(S.ord[k])}
 function payPick(k){if(!S.cur)return;S.cur.m=k;if(S.ord.some(function(x){return x.id===S.cur.id}))save();ordShow(S.cur)}
 function payCopy(){var p=payOf(S.cur.m);try{navigator.clipboard.writeText(p.no);toast('Nomor disalin')}catch(e){toast('Salin manual: '+p.no)}}
 function payBox(o){var p=payOf(o.m),t='<b style="color:var(--tx)">'+rp(o.a)+'</b>';
+ if(!o.a)return '<p style="color:var(--mut);font-size:14px;line-height:1.6;margin-top:10px">Total tagihan dan cara bayar akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p>';
  if(p.k==='QRIS')return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Scan QRIS di bawah, lalu bayar tepat '+t+'.</p><div style="text-align:center;margin:10px 0"><img src="'+p.qris+'" alt="QRIS ZVX STORE" style="width:100%;max-width:260px;border-radius:12px;background:#fff" onerror="this.style.display=\'none\';document.getElementById(\'qn\').style.display=\'block\'"><p id="qn" style="display:none;color:var(--mut);font-size:14px">Kode QRIS akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p></div>';
  if(p.no)return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Transfer '+t+' ke <b style="color:var(--tx)">'+esc(p.k+(p.bank?' '+p.bank:''))+' '+esc(p.no)+'</b> a.n. '+esc(p.an)+'.</p><button class="cta" style="background:var(--bg);color:var(--tx);margin:0 0 4px" onclick="payCopy()">Salin nomor</button>';
  return '<p style="color:var(--mut);font-size:14px;line-height:1.6">Total bayar '+t+'. Nomor '+esc(p.k)+' akan dikirim admin lewat WhatsApp setelah kamu kirim pesanan.</p>'}
 function ordShow(o){S.cur=o;if(!o.m)o.m='DANA';
- open_('<h3>Konfirmasi pesanan</h3><div class="list" style="margin:0 0 4px"><div class="row"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+'</small></div><div class="amt">'+rp(o.a)+'</div></div></div>'
+ open_('<h3>Konfirmasi pesanan</h3><div class="list" style="margin:0 0 4px"><div class="row"><div><b>'+esc(o.t)+'</b><small>'+esc(o.s)+'</small></div><div class="amt">'+ta(o)+'</div></div></div>'
  +'<label>Pilih metode pembayaran</label><div class="chips">'+PAY.map(function(p){return '<div class="chip'+(o.m===p.k?' on':'')+'" onclick="payPick(\''+p.k+'\')">'+p.k+'</div>'}).join('')+'</div>'
  +payBox(o)
  +'<p style="color:var(--mut);font-size:13px;line-height:1.6;margin-top:10px">Setelah bayar, kirim pesanan dan bukti bayar ke WhatsApp admin. Pesanan diproses setelah pembayaran dicek.</p>'
  +'<button class="cta" onclick="ordWa()">Kirim pesanan via WhatsApp</button>'
  +'<button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="close_()">Tutup</button>')}
 function ordWa(){var o=S.cur;if(!o)return;if(!S.ord.some(function(x){return x.id===o.id})){S.ord.unshift(o);save();draw()}wa(orderText(o))}
+
+// Biaya admin untuk layanan tagihan (ubah sesuai tokomu)
+var ADM={bpjs:3000,samsat:3000};
+var TG={bpjs:{n:'BPJS Kesehatan',l:'Nomor VA BPJS',ph:'16 digit nomor VA',im:'numeric'},samsat:{n:'E-Samsat',l:'Nomor polisi',ph:'Contoh: S 1234 AB',im:''}};
+function tagihan(k){S.tg=k;var t=TG[k];
+ open_('<h3>'+t.n+'</h3><label for="tg1">'+t.l+'</label><input id="tg1" '+(t.im?'inputmode="'+t.im+'" ':'')+'placeholder="'+t.ph+'" autocomplete="off"><label for="tg2">Nama pemilik (opsional)</label><input id="tg2" autocomplete="off"><label for="tg3">Nominal tagihan, jika sudah tahu (opsional)</label><input id="tg3" inputmode="numeric" placeholder="Contoh: 150000"><label for="tg4">Catatan (opsional)</label><input id="tg4" autocomplete="off"><p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(ADM[k])+'. Kalau nominal dikosongkan, admin akan mengecek tagihan dan membalas lewat WhatsApp.</p><button class="cta" onclick="tgGo()">Lanjut</button>')}
+function tgGo(){var k=S.tg,t=TG[k],no=$('tg1').value.trim();if(no.length<5){toast('Isi nomor tagihan dulu');return}
+ var nom=parseInt($('tg3').value.replace(/\D/g,''))||0,nama=$('tg2').value.trim(),cat=$('tg4').value.trim();
+ bayar(nom?t.n+' '+rp(nom)+' + admin '+rp(ADM[k]):t.n+' (cek tagihan)',no+(nama?' · '+nama:'')+(cat?' · '+cat:''),nom?nom+ADM[k]:0)}
 
 var sel=null,mode='pulsa';
 function pulsa(){sel=null;mode='pulsa';pl()}
