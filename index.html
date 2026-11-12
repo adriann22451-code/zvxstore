@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ZVX STORE – Pulsa & Jasa Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1f7ae0">
+<meta name="theme-color" content="#1b1245">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ZVX STORE">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -83,6 +84,55 @@ input:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px
 .hd{display:flex;justify-content:space-between;align-items:center}
 .chat{background:rgba(255,255,255,.22);color:#fff;border:0;border-radius:20px;padding:9px 15px;font-size:14px;cursor:pointer}
 .hero h1{font-size:22px;margin:26px 0 0;font-weight:700}
+/* ===== Tampilan baru: ungu malam + emas koin ===== */
+:root{--bg:#f4f2fb;--card:#fff;--tx:#1a1633;--mut:#6f6a8a;--pri:#6a43ff;--pri2:#8f6bff;--line:#e8e4f5;--gold:#ffc53d;--ink:#171036}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#100c24;--card:#1b1535;--tx:#efeaff;--mut:#9a92bd;--line:#2c2450;--pri:#8d6bff;--pri2:#6a43ff}}
+:root[data-theme="dark"]{--bg:#100c24;--card:#1b1535;--tx:#efeaff;--mut:#9a92bd;--line:#2c2450;--pri:#8d6bff;--pri2:#6a43ff}
+*{font-family:"Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+body{padding-bottom:104px}
+.hero{background:radial-gradient(120% 90% at 88% 0%,rgba(255,197,61,.38),transparent 55%),linear-gradient(165deg,#2c1b78,#171036 75%);padding:24px 20px 78px;border-radius:0 0 34px 34px}
+.hero h1{font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:28px;max-width:11em}
+.brand b{font-weight:800;letter-spacing:-.01em}.brand img{border-radius:14px}
+.chat{background:var(--gold);color:#2a1700;font-weight:700}
+.box{border-radius:26px;padding:20px 8px;box-shadow:0 14px 34px rgba(23,16,54,.16)}
+.up{margin-top:-52px}
+.grid{gap:18px 0}
+.grid button{font-weight:600;font-size:12.5px;gap:8px}
+.grid button:nth-child(8n+1){--h:#6a43ff}.grid button:nth-child(8n+2){--h:#f59e0b}.grid button:nth-child(8n+3){--h:#0ea5a4}.grid button:nth-child(8n+4){--h:#ec4899}
+.grid button:nth-child(8n+5){--h:#22a35a}.grid button:nth-child(8n+6){--h:#ef4444}.grid button:nth-child(8n+7){--h:#0ea5e9}.grid button:nth-child(8n){--h:#64748b}
+.grid i{width:52px;height:52px;border-radius:18px;background:color-mix(in srgb,var(--h,var(--pri)) 15%,var(--card));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--h,var(--pri)) 22%,transparent)}
+.grid button i.lg{background:#fff;padding:7px;box-shadow:0 2px 8px rgba(23,16,54,.14)}
+h2{font-size:18px;font-weight:800;letter-spacing:-.01em;margin:26px 20px 12px}
+.promo{border-radius:24px;background:linear-gradient(120deg,#ffd45e,#ff9d2e);color:#2a1700;margin:16px 14px 0;box-shadow:0 10px 24px rgba(255,157,46,.28)}
+.promo b{font-size:20px;font-weight:800}
+.promo button{background:var(--ink);color:var(--gold);padding:10px 18px;font-weight:700}
+.list{border-radius:24px;box-shadow:0 1px 0 var(--line),0 8px 22px rgba(23,16,54,.06)}
+.row{padding:15px 18px}.row b{font-weight:700}
+.amt{color:var(--pri)}
+.svc i{background:color-mix(in srgb,var(--pri) 13%,var(--card));border-radius:14px}
+.btn2{border-radius:12px;padding:9px 15px;background:linear-gradient(135deg,var(--pri),var(--pri2))}
+.op{background:var(--gold);color:#2a1700;font-weight:700;padding:3px 10px;border-radius:10px}
+nav{bottom:10px;width:calc(100% - 24px);max-width:456px;border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 28px rgba(23,16,54,.2);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);padding:9px 0}
+nav button{font-weight:600}nav button.on{font-weight:800}
+nav button.on::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--pri);margin-top:1px}
+.ov{background:rgba(16,12,36,.58);backdrop-filter:blur(3px)}
+.sheet{border-radius:30px 30px 0 0;padding:14px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet::before{content:"";display:block;width:42px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 16px}
+.sheet h3{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.ov.on .sheet{animation:up .22s ease-out}
+@keyframes up{from{transform:translate(-50%,28px);opacity:.5}to{transform:translate(-50%,0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.ov.on .sheet{animation:none}}
+label{font-weight:600}
+input,select{border-radius:14px;padding:14px;border:1.5px solid var(--line)}
+input:focus,select:focus{outline:0;border-color:var(--pri);box-shadow:0 0 0 4px color-mix(in srgb,var(--pri) 18%,transparent)}
+.chip{border-radius:15px;padding:12px 6px;font-weight:600}
+.chip small{color:var(--pri);font-weight:700}
+.chip.on{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 12%,var(--card));box-shadow:0 0 0 3px color-mix(in srgb,var(--pri) 18%,transparent)}
+.cta{border-radius:16px;font-weight:800;background:linear-gradient(135deg,var(--pri),var(--pri2));box-shadow:0 10px 20px color-mix(in srgb,var(--pri) 32%,transparent)}
+.cta[style]{box-shadow:none}.cta:disabled{box-shadow:none}
+.tabs button{border-radius:13px;font-weight:600}
+.tabs .on{background:color-mix(in srgb,var(--pri) 12%,var(--card))}
+.empty{padding:34px 16px}
 </style>
 </head>
 <body>
