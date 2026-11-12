@@ -115,7 +115,7 @@ function home(){
  var h='<div class="hero"><div class="hd"><div class="brand"><img src="icon-192.png" alt="Logo ZVX STORE"><div><b>ZVX STORE</b><small>Pulsa · Token · Jasa Online</small></div></div><button class="chat" onclick="wa()">💬 Chat</button></div><h1>Mau beli apa hari ini?</h1></div>'
  +'<div class="box up"><div class="grid">'
  +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
- +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"bpjs()")+mi('🚗','E-Samsat',"samsat()")+mi('⋯','Lainnya','lain()')
+ +mi('🎮','Voucher Game','voucher()')+mi('🏥','BPJS',"bpjs()")+mi('🚗','E-Samsat',"samsat()")+mi('⋯','Lainnya','lain()')
  +'</div></div>'
  +'<div class="promo"><b>Pulsa mulai '+rp(PULSA[0]+MU)+'</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
@@ -180,6 +180,17 @@ function lnVals(){return LN[lnK].f.map(function(f,i){var e=$('ln'+i),v=e.value.t
 function lnChk(){var x=LN[lnK],v=lnVals();$('lngo').disabled=!x.f.every(function(f,i){return f.o?true:v[i].length>=(f.t==='num'?6:3)})}
 function lnGo(){var x=LN[lnK],v=lnVals(),n=v.length-1,id=v[n];
  bayar(x.n+' (cek tagihan)',v.slice(0,n).concat(['ID ••••'+id.slice(-4)]).join(' · '),0,'Layanan: '+x.n+'\n'+x.f.map(function(f,i){return f.l+': '+v[i]}).join('\n'))}
+var VC=PRODUK.voucher||[],vcK=0,vcSel=null;
+function voucher(){open_('<h3>Voucher Game</h3><div class="grid">'+VC.map(function(x,k){return '<button onclick="vcBrand('+k+')"><i>'+x.i+'</i>'+esc(x.n)+'</button>'}).join('')+'</div>')}
+function vcBrand(k){vcK=k;vcSel=null;var x=VC[k];
+ open_('<h3>'+x.i+' '+esc(x.n)+'</h3>'+x.f.map(function(f,i){return '<label for="vf'+i+'">'+esc(f.l)+'</label><input id="vf'+i+'" '+(f.t==='num'?'inputmode="numeric" ':'')+'placeholder="'+esc(f.ph||'')+'" autocomplete="off" oninput="vcChk()">'}).join('')
+ +'<label>Pilih produk</label><div class="chips" style="grid-template-columns:repeat(2,1fr)">'+x.items.map(function(it,i){return '<div class="chip vci" onclick="vcPick('+i+')">'+esc(it[0])+'<small>'+rp(it[1])+'</small></div>'}).join('')+'</div>'
+ +'<p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">'+(x.f.length?'Pastikan ID akun sudah benar. Top up diproses admin setelah pembayaran dicek.':'Kode voucher dikirim admin lewat WhatsApp setelah pembayaran dicek.')+'</p>'
+ +'<button class="cta" id="vcgo" disabled onclick="vcGo()">Pesan</button><button class="cta" style="background:var(--bg);color:var(--tx);margin-top:8px" onclick="voucher()">Kembali</button>')}
+function vcVals(){return VC[vcK].f.map(function(f,i){var e=$('vf'+i),v=e.value.trim();if(f.t==='num'){var d=v.replace(/\D/g,'');if(e.value!==d)e.value=d;v=d}return v})}
+function vcChk(){var v=vcVals();$('vcgo').disabled=!(vcSel!==null&&v.every(function(t){return t.length>=3}))}
+function vcPick(i){vcSel=i;var c=document.querySelectorAll('.vci');for(var j=0;j<c.length;j++)c[j].className='chip vci'+(j===i?' on':'');$('vcgo').textContent='Pesan '+rp(VC[vcK].items[i][1]);vcChk()}
+function vcGo(){var x=VC[vcK],it=x.items[vcSel],v=vcVals();bayar(x.n+' · '+it[0],v.length?v.join(' · '):'Kode dikirim via WhatsApp',it[1])}
 var SW=PRODUK.samsat||[];
 function samsat(){
  open_('<h3>E-Samsat</h3><label for="sw">Pilih wilayah</label><select id="sw">'+SW.map(function(w){return '<option>'+esc(w)+'</option>'}).join('')+'</select>'
