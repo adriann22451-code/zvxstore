@@ -14,6 +14,10 @@ var PRODUK = {
   ],
   token: [20000, 50000, 100000, 200000, 500000],
   tokenp: { 20000: 23000, 50000: 53000, 100000: 103000, 200000: 203000, 500000: 510000 },
+  // Jenis BPJS yang kamu layani.
+  bpjs: ['Ketenagakerjaan Bukan Penerima Upah & Pekerja Migran', 'Ketenagakerjaan Penerima Upah', 'Kesehatan', 'BPJS Denda'],
+  // Wilayah E-Samsat yang kamu layani (ubah/tambah sesuai kebutuhan).
+  samsat: ['Samsat JATIM', 'Samsat JATENG', 'Samsat JABAR', 'Samsat DIY', 'Samsat DKI JAKARTA', 'Samsat BANTEN', 'Samsat BALI'],
   adm: { bpjs: 3000, samsat: 3000 },       // biaya admin tagihan
   jasa: [
     { i: '🎨', n: 'Desain logo', d: '3 konsep, revisi 2x', p: 150000 },

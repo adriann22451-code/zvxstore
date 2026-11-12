@@ -51,7 +51,7 @@ nav .pay span{color:var(--pri);font-weight:700;margin-top:-2px}
 .sheet{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom,0px))}
 .sheet h3{font-size:18px;margin-bottom:14px}
 label{font-size:13px;color:var(--mut);display:block;margin:12px 0 6px}
-input{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;background:var(--bg);color:var(--tx)}
+input,select{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;background:var(--bg);color:var(--tx)}
 input:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .chip{border:1.5px solid var(--line);background:var(--bg);color:var(--tx);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;font-size:14px}
@@ -114,7 +114,7 @@ function home(){
  var h='<div class="hero"><div class="hd"><div class="brand"><img src="icon-192.png" alt="Logo ZVX STORE"><div><b>ZVX STORE</b><small>Pulsa · Token · Jasa Online</small></div></div><button class="chat" onclick="wa()">💬 Chat</button></div><h1>Mau beli apa hari ini?</h1></div>'
  +'<div class="box up"><div class="grid">'
  +mi('📱','Pulsa & Data','pulsa()')+mi('💡','Listrik','listrik()')+mi('🧑‍💻','Jasa Online','jasa()')+mi('💬','Chat Admin','wa()')
- +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"tagihan('bpjs')")+mi('🚗','E-Samsat',"tagihan('samsat')")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
+ +mi('🎮','Voucher Game',"toast('Voucher game segera hadir')")+mi('🏥','BPJS',"bpjs()")+mi('🚗','E-Samsat',"samsat()")+mi('⋯','Lainnya',"toast('Layanan lain segera hadir')")
  +'</div></div>'
  +'<div class="promo"><b>Pulsa mulai '+rp(PULSA[0]+MU)+'</b>Semua operator, proses cepat.<br><button onclick="pulsa()">Beli sekarang</button></div>'
  +'<h2>Jasa online populer</h2><div class="list">'+JASA.slice(0,3).map(function(j,k){return svc(j,k)}).join('')+'</div>'
@@ -136,9 +136,9 @@ function draw(){
  var n=[['home','🏠','Beranda'],['act','🧾','Pesanan'],['me','🏪','Info toko']];
  $('nav').innerHTML=n.map(function(x){return '<button class="'+(S.tab===x[0]?'on':'')+'" onclick="S.tab=\''+x[0]+'\';draw();scrollTo(0,0)"><i>'+x[1]+'</i>'+x[2]+'</button>'}).join('')}
 
-function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+'\nTotal: '+(o.a?rp(o.a):'(mohon dicek admin)')+'\nPembayaran: '+(o.m||'DANA')+'\n\nSaya kirim bukti pembayaran di chat ini.'}
-function bayar(title,sub,amt){
- ordShow({id:'ZVX-'+Date.now().toString().slice(-8),t:title,s:sub,a:amt,m:'DANA',d:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})})}
+var EXTRA={};
+function orderText(o){return '*Pesanan '+TOKO.nama+'*\nNo: '+o.id+'\nProduk: '+o.t+'\nTujuan: '+o.s+(EXTRA[o.id]?'\n'+EXTRA[o.id]:'')+'\nTotal: '+(o.a?rp(o.a):'(mohon dicek admin)')+'\nPembayaran: '+(o.m||'DANA')+'\n\n'+(o.a?'Saya kirim bukti pembayaran di chat ini.':'Mohon dicek tagihannya dan kabari totalnya, ya.')}
+function bayar(title,sub,amt,x){var o={id:'ZVX-'+Date.now().toString().slice(-8),t:title,s:sub,a:amt,m:'DANA',d:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};if(x)EXTRA[o.id]=x;ordShow(o)}
 function ordView(k){if(S.ord[k])ordShow(S.ord[k])}
 function payPick(k){if(!S.cur)return;S.cur.m=k;if(S.ord.some(function(x){return x.id===S.cur.id}))save();ordShow(S.cur)}
 function payCopy(){var p=payOf(S.cur.m);try{navigator.clipboard.writeText(p.no);toast('Nomor disalin')}catch(e){toast('Salin manual: '+p.no)}}
@@ -157,12 +157,28 @@ function ordShow(o){S.cur=o;if(!o.m)o.m='DANA';
 function ordWa(){var o=S.cur;if(!o)return;if(!S.ord.some(function(x){return x.id===o.id})){S.ord.unshift(o);save();draw()}wa(orderText(o))}
 
 var ADM=PRODUK.adm;
-var TG={bpjs:{n:'BPJS Kesehatan',l:'Nomor VA BPJS',ph:'16 digit nomor VA',im:'numeric'},samsat:{n:'E-Samsat',l:'Nomor polisi',ph:'Contoh: S 1234 AB',im:''}};
-function tagihan(k){S.tg=k;var t=TG[k];
- open_('<h3>'+t.n+'</h3><label for="tg1">'+t.l+'</label><input id="tg1" '+(t.im?'inputmode="'+t.im+'" ':'')+'placeholder="'+t.ph+'" autocomplete="off"><label for="tg2">Nama pemilik (opsional)</label><input id="tg2" autocomplete="off"><label for="tg3">Nominal tagihan, jika sudah tahu (opsional)</label><input id="tg3" inputmode="numeric" placeholder="Contoh: 150000"><label for="tg4">Catatan (opsional)</label><input id="tg4" autocomplete="off"><p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(ADM[k])+'. Kalau nominal dikosongkan, admin akan mengecek tagihan dan membalas lewat WhatsApp.</p><button class="cta" onclick="tgGo()">Lanjut</button>')}
-function tgGo(){var k=S.tg,t=TG[k],no=$('tg1').value.trim();if(no.length<5){toast('Isi nomor tagihan dulu');return}
- var nom=parseInt($('tg3').value.replace(/\D/g,''))||0,nama=$('tg2').value.trim(),cat=$('tg4').value.trim();
- bayar(nom?t.n+' '+rp(nom)+' + admin '+rp(ADM[k]):t.n+' (cek tagihan)',no+(nama?' · '+nama:'')+(cat?' · '+cat:''),nom?nom+ADM[k]:0)}
+var BJ=PRODUK.bpjs||[];
+function bpjs(){
+ open_('<h3>BPJS</h3><label for="bj">Jenis BPJS</label><select id="bj">'+BJ.map(function(w){return '<option>'+esc(w)+'</option>'}).join('')+'</select>'
+ +'<label for="bj1">Nomor Virtual Account / nomor peserta</label><input id="bj1" inputmode="numeric" maxlength="16" placeholder="Contoh: 8888801234567890" autocomplete="off" oninput="bjChk()">'
+ +'<label for="bj2">Jumlah pembayaran iuran</label><select id="bj2">'+[1,2,3,4,5,6,7,8,9,10,11,12].map(function(n){return '<option value="'+n+'">'+n+' bulan</option>'}).join('')+'</select>'
+ +'<p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(ADM.bpjs)+'. Admin akan mengecek tagihan dan membalas lewat WhatsApp. Nomor VA hanya dikirim ke WhatsApp admin dan tidak disimpan utuh di perangkat ini.</p>'
+ +'<button class="cta" id="bjgo" disabled onclick="bjGo()">Cek Tagihan</button>')}
+function bjChk(){var n=$('bj1'),d=n.value.replace(/\D/g,'');if(n.value!==d)n.value=d;$('bjgo').disabled=!(d.length>=10&&d.length<=16)}
+function bjGo(){var j=$('bj').value,va=$('bj1').value.replace(/\D/g,''),b=$('bj2').value;
+ bayar((/^BPJS/.test(j)?j:'BPJS '+j)+' (cek tagihan)','VA ••••'+va.slice(-4)+' · '+b+' bulan',0,'Jenis: '+(/^BPJS/.test(j)?j:'BPJS '+j)+'\nNomor VA: '+va+'\nIuran: '+b+' bulan')}
+var SW=PRODUK.samsat||[];
+function samsat(){
+ open_('<h3>E-Samsat</h3><label for="sw">Pilih wilayah</label><select id="sw">'+SW.map(function(w){return '<option>'+esc(w)+'</option>'}).join('')+'</select>'
+ +'<label for="sm1">Nomor polisi</label><input id="sm1" placeholder="Contoh: S 1234 AB" autocomplete="off" autocapitalize="characters" oninput="smChk()">'
+ +'<label for="sm2">Nomor mesin</label><input id="sm2" placeholder="Tertera di STNK" autocomplete="off" autocapitalize="characters" oninput="smChk()">'
+ +'<label for="sm3">NIK</label><input id="sm3" inputmode="numeric" maxlength="16" placeholder="16 digit NIK pemilik" autocomplete="off" oninput="smChk()">'
+ +'<p style="color:var(--mut);font-size:13px;margin-top:12px;line-height:1.5">Biaya admin '+rp(ADM.samsat)+'. Admin akan mengecek tagihan dan membalas lewat WhatsApp. Nomor mesin dan NIK hanya dikirim ke WhatsApp admin, tidak disimpan di perangkat ini.</p>'
+ +'<button class="cta" id="smgo" disabled onclick="smGo()">Cek Tagihan</button>')}
+function smVal(){var d=$('sm3').value.replace(/\D/g,'');return {sw:$('sw').value,np:$('sm1').value.replace(/\s/g,'').toUpperCase(),ms:$('sm2').value.replace(/\s/g,'').toUpperCase(),nik:d}}
+function smChk(){var n=$('sm3'),v=smVal();if(n.value!==v.nik)n.value=v.nik;$('smgo').disabled=!(/^[A-Z]{1,2}\d{1,4}[A-Z]{0,3}$/.test(v.np)&&/^[A-Z0-9]{5,}$/.test(v.ms)&&v.nik.length===16)}
+function smGo(){var v=smVal();
+ bayar('E-Samsat (cek tagihan)',v.np+' · '+v.sw+' · Mesin ••••'+v.ms.slice(-3)+' · NIK ••••'+v.nik.slice(-4),0,'Wilayah: '+v.sw+'\nNomor polisi: '+v.np+'\nNomor mesin: '+v.ms+'\nNIK: '+v.nik)}
 
 var sel=null,mode='pulsa';
 function pulsa(){sel=null;mode='pulsa';pl()}
